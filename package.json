@@ -1,0 +1,36 @@
+{
+  "name": "mitumc",
+  "version": "0.0.1",
+  "description": "mitum-currency-javascript sdk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wyuinche/mitum-js-util.git"
+  },
+  "keywords": [
+    "mitum-currency",
+    "mitum",
+    "javascript"
+  ],
+  "author": "wyuinche",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/wyuinche/mitum-js-util/issues"
+  },
+  "homepage": "https://github.com/wyuinche/mitum-js-util#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/bignum": "0.0.29",
+    "bignum": "^0.13.1",
+    "bs58": "^4.0.1",
+    "bs58check": "^2.1.2",
+    "crypto": "^1.0.1",
+    "eccrypto-js": "^5.4.0",
+    "elliptic": "^6.5.4",
+    "secp256k1": "^4.0.2",
+    "stellar-sdk": "^8.2.2"
+  }
+}
