@@ -1,0 +1,53 @@
+{
+    "_hint": "seal-v0.0.1",
+    "hash": "6Bu1rnvk8tJpjx76ekusZCRpwEgdD3UosdaLru5QxxhN",
+    "body_hash": "HMtKaQNhDYxzLvdatj7w7YaHtjq7g117vV8mkWkKAJd",
+    "signer": "cnMJqt1Q7LXKqFAWprm6FBC7fRbWQeZhrymTavN11PKJ:btc-pub-v0.0.1",
+    "signature": "AN1rKvtSwGCURr7Kg2HVSsyVe8WtfNe77KQTq7LHiJEc7apsPfT9mBUQpb9pVHVAFPWMWfnzQfqnL4Z2Am4GZffpyvD54wknN",
+    "signed_at": "2021-06-11T06:03:14.109Z",
+    "operations": [
+        {
+            "memo": "",
+            "_hint": "mitum-currency-create-accounts-operation-v0.0.1",
+            "fact": {
+                "_hint": "mitum-currency-create-accounts-operation-fact-v0.0.1",
+                "hash": "3YAgjtD14asETmQ8xK33sEYrZHfqoKmm9S8vDno5uFXV",
+                "token": "MjAyMS0wNi0xMVQwNjowMzoxNC4wOTFa",
+                "sender": "EbVibuKTyPqRVRcCpMRQdP7wBkr33GW2brSQvZQNJDSn:mca-v0.0.1",
+                "items": [
+                    {
+                        "_hint": "mitum-currency-create-accounts-single-amount-v0.0.1",
+                        "keys": {
+                            "_hint": "mitum-currency-keys-v0.0.1",
+                            "hash": "6WjXWBwv7KUUAWLg35o5KyGcWchvPFzhxMGjB5rRYbKn",
+                            "keys": [
+                                {
+                                    "_hint": "mitum-currency-key-v0.0.1",
+                                    "weight": 100,
+                                    "key": "GCJINCZI7TCZ5LT5FYB5TNKA6IU5WCQABSE5OIVWFVPBN7HOINF73F4H:stellar-pub-v0.0.1"
+                                }
+                            ],
+                            "threshold": 100
+                        },
+                        "amounts": [
+                            {
+                                "_hint": "mitum-currency-amount-v0.0.1",
+                                "amount": "100",
+                                "currency": "MCC"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "hash": "Ez7mcv1aXnrADGfraghd4r5ThHpZr9T2oopaGaU8ZYuJ",
+            "fact_signs": [
+                {
+                    "_hint": "base-fact-sign-v0.0.1",
+                    "signer": "cnMJqt1Q7LXKqFAWprm6FBC7fRbWQeZhrymTavN11PKJ:btc-pub-v0.0.1",
+                    "signature": "381yXZLqxGPx4XT3miepRzNiEZvpNhu4z98m8ZCWo6ugVyr1DCqydn1VwxanY3a7sZVGxSyEjaXWfUZKMqaq9LD1YTTwhkSK",
+                    "signed_at": "2021-06-11T06:03:14.108Z"
+                }
+            ]
+        }
+    ]
+}
