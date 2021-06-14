@@ -21,9 +21,7 @@
     "url": "https://github.com/ProtoconNet/mitum-js-util/issues"
   },
   "homepage": "https://github.com/ProtoconNet/mitum-js-util#readme",
-  "dependencies": {},
-  "devDependencies": {
-    "@types/bignum": "0.0.29",
+  "dependencies": {
     "bignum": "^0.13.1",
     "bs58": "^4.0.1",
     "bs58check": "^2.1.2",
@@ -33,5 +31,5 @@
     "secp256k1": "^4.0.2",
     "stellar-sdk": "^8.2.2"
   },
-  "files": []
+  "devDependencies": {}
 }
