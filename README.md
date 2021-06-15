@@ -124,7 +124,7 @@ When you use 'Generator', you must set 'network id' before you create something.
 >>> createAccounts.addSign(sourcePriv);
 ```
 
-You must add new fact signature by addSign before create seal or json files from an operation.
+You must add new fact signature by addSign before creating seal or json files from an operation.
 
 Then Operation.dict() methods work correctly.
 
@@ -150,7 +150,7 @@ Then Operation.dict() methods work correctly.
 
 ### Generate Key-Updater
 
-Key-Updater literally supports to update cource public key to something else.
+Key-Updater literally supports to update source public key to something else.
 
 #### Usage
 
@@ -209,7 +209,7 @@ Registration of 'signing key' as the private key for an account is not neccessar
 
 ### JSONParser
 
-You can create a json file from generated seal object without 'JSONParser' class provided by 'mitumc'. However, I recommend that use 'JSONParser' for convenience.
+You can create a json file from generated seal object without 'JSONParser' class provided by 'mitumc'. However, I recommend to use 'JSONParser' for convenience.
 
 Modules that 'JSONParser' supports are,
 
