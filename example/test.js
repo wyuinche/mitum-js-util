@@ -39,8 +39,8 @@ const transfersFact = generator.createTransfersFact(source_addr, [transfersItem]
 const transfers = generator.createOperation(transfersFact, "");
 transfers.addSign(source_priv);
 
-const seal = generator.createSeal(t3_priv, [transfers]);
+const seal = generator.createSeal(t3_priv, [createAccounts, keyUpdater, transfers]);
 
 const parser = Xseal.JSONParser;
-// console.log(parser.toJSONString(seal));
+console.log(parser.toJSONString(seal));
 parser.generateFile(seal, './example/seal.json');
