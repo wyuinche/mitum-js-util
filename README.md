@@ -2,6 +2,8 @@
 
 'mitum-js-util' will introduce the usage of [mitum-currency](https://github.com/ProtoconNet/mitum-currency) for Javascript.
 
+This project is being totally copied to [ProtoconNet/mitum-js-util](https://github.com/ProtoconNet/mitum-js-util).
+
 ## Installation
 
 Recommended requirements for 'mitum-js-util' are,
@@ -77,7 +79,7 @@ Modules that 'Generator' supports are,
 
 ```js
 >>> Generator.setNetworkID(netID)
->>> Generator.formatKey(key, weight) 
+>>> Generator.formatKey(key, weight)
 >>> Generator.formatAmount(big, cid)
 >>> Generator.createKeys(keys, threshold)
 >>> Generator.createAmounts(amounts) 
@@ -258,3 +260,80 @@ $ ./mc seal send --network-id=$NETWORK_ID $SIGNING_KEY --seal=seal.json
 ```
 
 * seal.json is your seal file.
+
+## Sign Message
+
+Sign message with btc, ether, stellar keypair.
+
+'mitumc' supports 'generate' and 'get' keypairs. You can get signature digest which contains a signature by signing with keypairs.
+
+### Usage
+
+#### Generate Keypair
+
+```js
+>>> const mitumc = require('mitumc');
+
+>>> const btckp = mitumc.getKeypair('btc'); # returns BTCKeyPair
+>>> const ethkp = mitumc.getKeypair('ether'); # returns ETHKeyPair
+>>> const stlkp = mitumc.getKeypair('stellar'); # returns StellarKeyPair
+
+>>> btckp.privKey.key
+'Kx8iQPN3jiHcyKQDrsMitKqWPfMfoRZY5HtgeTi5z4ka96M4WuzV'
+
+>>> btckp.pubKey
+'yX6ZF6hEyUeB982tVGLRwVXkMpXmWFYcUTrbrLrtP82K'
+
+>>> ethkp.privKey.key
+'ed2cbba9ca8275589fb34077a71eb644532c3a5da99bc45bf5240860e92ef206'
+
+>>> ethkp.pubKey
+'0444d85b17c09878a78faf79dbd556c8dba98fc54b5e731724f748afe157e3fe9b1feb7130734a5f5aef96d9a4c42e1b53946d6e0bb35b133219ce296897ed864e'
+
+>>> stlkp.privkey.key
+'SDPOMCTDYBZVVLSXSBDLR6TFGY6C7EPPVJXCSYF7XLH7B3WMY5EWE6A7'
+
+>>> stlkp.pubKey
+'GCCLMGH7QKO6NI4OJ42YRLADR6XSVZQEOMRSCB4BROY6PAX4Z3WC264A'
+```
+
+Note that 'mitumc.getKeypair()' and 'mitumc.toKeypair()' provides compressed btc key - aka compressed wif.
+
+Of course, you can get any keypair with your known private key by using 'toKeypair'.
+
+Note that it works with either hintless or hinted keys to generate keypairs. (key-hint ex. btc-priv, ether-pub, etc...) 
+
+```js
+>>> const mitumc = require('mitumc');
+
+# both work same
+>>> const btckp = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD:btc-priv-v0.0.1", '');
+>>> const btckp2 = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD", 'btc') # returns BTCKeyPair
+
+>>> const ethkp = to_ether_keypair("013e56aca7cf88d95aa6535fb6c66f366d449a0380128e0eb656a863b45a5ad5:ether-priv-v0.0.1", '') # returns ETHKeyPair
+>>> const stlkp = to_stellar_keypair("SBZV72AJVXGARRY6BYXF5IPNQYWMGZJ5YVF6NIENEEATETDF6LGH4CLL:stellar-priv-v0.0.1", '') # returns StellarKeyPair
+```
+
+#### Sign Message
+
+Each keypair supports 'sign' method that generates Buffer format signature by signing Buffer format message.
+
+If you want to get signature for 'mitum-currency', use 'bs58' to encode the signature.
+
+```js
+>>> const mitumc = require('mitumc'); 
+>>> const bs58 = require('bs58');
+
+>>> const msg = Buffer.from('mitum');
+
+>>> const btckp = mitumc.getKeypair('btc');
+>>> const sign = btckp.sign(msg)
+
+>>> sign
+<Buffer 30 45 02 21 00 9f 21 a9 5d 98 12 60 20 46 0d 0f 2f 48 ab 88 02 21 21 40 6c f2 24 01 32 87 24 3c 06 a2 a2 da 33 02 20 3b a1 43 c0 a0 c1 6b bf 02 c5 95 ... >
+
+>>> bs58.encode(sign);
+'AN1rKvtAFuz64U5jEK6FRpxoiLCiGWAjoX3R6NYPQE3WJfpTj9ye9vAyAV3yaGSeangJE1GK8U2eNLSFo2siKq2Zc2CXXUiVE'
+```
+
+Omit ether/stellar keypair sign. (bcz same...)
