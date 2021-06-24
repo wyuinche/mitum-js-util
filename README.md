@@ -2,8 +2,6 @@
 
 'mitum-js-util' will introduce the usage of [mitum-currency](https://github.com/ProtoconNet/mitum-currency) for Javascript.
 
-This project is being totally copied to [ProtoconNet/mitum-js-util](https://github.com/ProtoconNet/mitum-js-util).
-
 ## Installation
 
 Recommended requirements for 'mitum-js-util' are,
@@ -274,9 +272,9 @@ Sign message with btc, ether, stellar keypair.
 ```js
 >>> const mitumc = require('mitumc');
 
->>> const btckp = mitumc.getKeypair('btc'); # returns BTCKeyPair
->>> const ethkp = mitumc.getKeypair('ether'); # returns ETHKeyPair
->>> const stlkp = mitumc.getKeypair('stellar'); # returns StellarKeyPair
+>>> const btckp = mitumc.getKeypair('btc'); // returns BTCKeyPair
+>>> const ethkp = mitumc.getKeypair('ether'); // returns ETHKeyPair
+>>> const stlkp = mitumc.getKeypair('stellar'); // returns StellarKeyPair
 
 >>> btckp.privKey.key
 'Kx8iQPN3jiHcyKQDrsMitKqWPfMfoRZY5HtgeTi5z4ka96M4WuzV'
@@ -306,12 +304,12 @@ Note that it works with either hintless or hinted keys to generate keypairs. (ke
 ```js
 >>> const mitumc = require('mitumc');
 
-# both work same
+// both work same
 >>> const btckp = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD:btc-priv-v0.0.1", '');
->>> const btckp2 = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD", 'btc') # returns BTCKeyPair
+>>> const btckp2 = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD", 'btc'); // returns BTCKeyPair
 
->>> const ethkp = to_ether_keypair("013e56aca7cf88d95aa6535fb6c66f366d449a0380128e0eb656a863b45a5ad5:ether-priv-v0.0.1", '') # returns ETHKeyPair
->>> const stlkp = to_stellar_keypair("SBZV72AJVXGARRY6BYXF5IPNQYWMGZJ5YVF6NIENEEATETDF6LGH4CLL:stellar-priv-v0.0.1", '') # returns StellarKeyPair
+>>> const ethkp = mitumc.toKeypair("013e56aca7cf88d95aa6535fb6c66f366d449a0380128e0eb656a863b45a5ad5:ether-priv-v0.0.1", ''); // returns ETHKeyPair
+>>> const stlkp = mitumc.toKeypair("SBZV72AJVXGARRY6BYXF5IPNQYWMGZJ5YVF6NIENEEATETDF6LGH4CLL:stellar-priv-v0.0.1", ''); // returns StellarKeyPair
 ```
 
 #### Sign Message
