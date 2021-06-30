@@ -6,9 +6,9 @@ const source_priv = "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-pr
 const source_pub = "cnMJqt1Q7LXKqFAWprm6FBC7fRbWQeZhrymTavN11PKJ:btc-pub-v0.0.1";
 const source_addr = "EbVibuKTyPqRVRcCpMRQdP7wBkr33GW2brSQvZQNJDSn:mca-v0.0.1";
 
-const t1_priv = "SAWCVZBRHKKEO74YJADBD6ALOPIQYGSSDS7FGKQ25UJ5CSBG4D5COXXV:stellar-priv-v0.0.1";
-const t1_pub = "GC4HJHQ2IAW4YTH7KLDE6BSC5WRTEPYZ625LPL4FGFUFGKWK2I7YWRYB:stellar-pub-v0.0.1";
-const t1_addr = "GYJMxzXsgUbhayJvG34HAVT6288EYEkUxdyghDhjibtv:mca-v0.0.1";
+const t1_priv = "SB5SXFLLX3J7DB57YIXPIK4HLH2NKNHSHLI7N6COKZZXR2XDT7AAWQH2:stellar-priv-v0.0.1";
+const t1_pub = "GBLMKGDYI6WICGZOM5XGMEMZJSQZQQKPYD7TPLFVTSHLGNA3CKU5Z27G:stellar-pub-v0.0.1";
+const t1_addr = "6yvRQ8mebL9HkArU5ZfgfNwahfcJF2rRecN5m47hv44r:mca-v0.0.1";
 
 const t2_priv = "2244f57b65ffc3fac621877ebe903c98c3e323d2b7d78fdad2ae5b951658e502:ether-priv-v0.0.1";
 const t2_pub = "04a38bb1568ae40d2a50e7c0d36357a51f4152125a50105a7dd24d517a4e23bfb109342ace92752d21db62bf3839dd482b82b315a86f56454213a8252b0af45d03:ether-pub-v0.0.1";
@@ -39,7 +39,7 @@ const transfersFact = generator.createTransfersFact(source_addr, [transfersItem]
 const transfers = generator.createOperation(transfersFact, "");
 transfers.addSign(source_priv);
 
-const seal = generator.createSeal(t3_priv, [createAccounts, keyUpdater, transfers]);
+const seal = generator.createSeal(t3_priv, [createAccounts]);
 
 const parser = Xseal.JSONParser;
 console.log(parser.toJSONString(seal));
