@@ -333,3 +333,131 @@ If you want to get signature for 'mitum-currency', use 'bs58' to encode the sign
 ```
 
 Omit ether/stellar keypair sign. (bcz same...)
+
+## Add Fact Signature to Operation
+
+With 'Signer' object in 'mitum-js-util', you can add new fact signature to operation json.
+
+To add signatures, you must prepare 'network id' and 'signing key'.
+
+### Usage
+
+For example, suppose that you already have an implemented operation json file like below.
+
+operation.json
+```json
+{
+    "memo": "",
+    "_hint": "mitum-currency-create-accounts-operation-v0.0.1",
+    "fact": {
+        "_hint": "mitum-currency-create-accounts-operation-fact-v0.0.1",
+        "hash": "A8z3Ybc4jTLFpfT7AN7Bo25peRQryeAjyZL3Q6EiUw2Q",
+        "token": "MjAyMS0wNi0zMFQwNTowMjo1Ny4xNDha",
+        "sender": "EbVibuKTyPqRVRcCpMRQdP7wBkr33GW2brSQvZQNJDSn:mca-v0.0.1",
+        "items": [
+            {
+                "_hint": "mitum-currency-create-accounts-single-amount-v0.0.1",
+                "keys": {
+                    "_hint": "mitum-currency-keys-v0.0.1",
+                    "hash": "6yvRQ8mebL9HkArU5ZfgfNwahfcJF2rRecN5m47hv44r",
+                    "keys": [
+                        {
+                            "_hint": "mitum-currency-key-v0.0.1",
+                            "weight": 100,
+                            "key": "GBLMKGDYI6WICGZOM5XGMEMZJSQZQQKPYD7TPLFVTSHLGNA3CKU5Z27G:stellar-pub-v0.0.1"
+                        }
+                    ],
+                    "threshold": 100
+                },
+                "amounts": [
+                    {
+                        "_hint": "mitum-currency-amount-v0.0.1",
+                        "amount": "100",
+                        "currency": "MCC"
+                    }
+                ]
+            }
+        ]
+    },
+    "hash": "4ZBBYutmuG7XRMbvxfUDeWvVKxu2qSPukGiBwthQZeb1",
+    "fact_signs": [
+        {
+            "_hint": "base-fact-sign-v0.0.1",
+            "signer": "cnMJqt1Q7LXKqFAWprm6FBC7fRbWQeZhrymTavN11PKJ:btc-pub-v0.0.1",
+            "signature": "381yXZAhzmRES8bssPkA2Pdy95NP1EDvEnNNwj1btcrdCgMLNRnWVpuqQgGLJwXsW4sjjZB7Ek9W4KmxZBSh1D47m4j93PQm",
+            "signed_at": "2021-06-30T05:02:57.212Z"
+        }
+    ]
+}
+```
+
+#### Sign Operation
+
+Use 'Signer.signOperation(#operation-file-path) object to add new fact signature to "fact_signs" key.
+
+After adding a fact signature, operation hash is always changed.
+
+```js
+>>> const Signer = require('mitumc').Signer;
+>>> const signer = new Signer('mitum', "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-priv-v0.0.1");
+
+>>> const newOperation = signer.signOperation('operation.json');
+```
+
+After signing, above operation must be like below.(Each value is up to input arguments and time)
+
+```json
+{
+    "memo": "",
+    "_hint": "mitum-currency-create-accounts-operation-v0.0.1",
+    "fact": {
+        "_hint": "mitum-currency-create-accounts-operation-fact-v0.0.1",
+        "hash": "A8z3Ybc4jTLFpfT7AN7Bo25peRQryeAjyZL3Q6EiUw2Q",
+        "token": "MjAyMS0wNi0zMFQwNTowMjo1Ny4xNDha",
+        "sender": "EbVibuKTyPqRVRcCpMRQdP7wBkr33GW2brSQvZQNJDSn:mca-v0.0.1",
+        "items": [
+            {
+                "_hint": "mitum-currency-create-accounts-single-amount-v0.0.1",
+                "keys": {
+                    "_hint": "mitum-currency-keys-v0.0.1",
+                    "hash": "6yvRQ8mebL9HkArU5ZfgfNwahfcJF2rRecN5m47hv44r",
+                    "keys": [
+                        {
+                            "_hint": "mitum-currency-key-v0.0.1",
+                            "weight": 100,
+                            "key": "GBLMKGDYI6WICGZOM5XGMEMZJSQZQQKPYD7TPLFVTSHLGNA3CKU5Z27G:stellar-pub-v0.0.1"
+                        }
+                    ],
+                    "threshold": 100
+                },
+                "amounts": [
+                    {
+                        "_hint": "mitum-currency-amount-v0.0.1",
+                        "amount": "100",
+                        "currency": "MCC"
+                    }
+                ]
+            }
+        ]
+    },
+    "fact_signs": [
+        {
+            "_hint": "base-fact-sign-v0.0.1",
+            "signer": "cnMJqt1Q7LXKqFAWprm6FBC7fRbWQeZhrymTavN11PKJ:btc-pub-v0.0.1",
+            "signature": "381yXZAhzmRES8bssPkA2Pdy95NP1EDvEnNNwj1btcrdCgMLNRnWVpuqQgGLJwXsW4sjjZB7Ek9W4KmxZBSh1D47m4j93PQm",
+            "signed_at": "2021-06-30T05:02:57.212Z"
+        },
+        {
+            "_hint": "base-fact-sign-v0.0.1",
+            "signer": "cnMJqt1Q7LXKqFAWprm6FBC7fRbWQeZhrymTavN11PKJ:btc-pub-v0.0.1",
+            "signature": "381yXZETg1xjq1dLJPV8ZVBnr8i62mF6Hg3MirYLYRX6bUw1evk2bCf5NaMUkav8G92AjRv6zfTi7zmvEjwW9r7bRwNa5219",
+            "signed_at": "2021-07-02T08:13:31.825Z"
+        }
+    ],
+    "hash": "FJCtuUm9v9YMbkER738ZzPpy1iGuTgabnaaxm5R9jHaV"
+}
+```
+
+Signer class doesn't create json file of new operation.
+
+Use 'JSONParser' if you need.
