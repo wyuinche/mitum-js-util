@@ -393,7 +393,7 @@ operation.json
 
 #### Sign Operation
 
-Use 'Signer.signOperation(#operation-file-path) object to add new fact signature to "fact_signs" key.
+Use 'Signer.signOperation(#operation-file-path)' to add new fact signature to "fact_signs" key.
 
 After adding a fact signature, operation hash is always changed.
 
