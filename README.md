@@ -163,7 +163,7 @@ Key-Updater literally supports to update source public key to something else.
 >>> const key = generator.formatKey(toPub, 100);
 >>> const keys = generator.createKeys([key], 100);
 
->>> const keyUpdaterFact = generator.createKeyUpdaterFact(fromAddr, "MCC", keys2);
+>>> const keyUpdaterFact = generator.createKeyUpdaterFact(fromAddr, "MCC", keys);
 >>> const keyUpdater = generator.createOperation(keyUpdaterFact, "");
 
 >>> keyUpdater.addSign(source_priv);
