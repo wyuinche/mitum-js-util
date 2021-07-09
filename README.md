@@ -401,7 +401,9 @@ After adding a fact signature, operation hash is always changed.
 >>> const Signer = require('mitumc').Signer;
 >>> const signer = new Signer('mitum', "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-priv-v0.0.1");
 
->>> const newOperation = signer.signOperation('operation.json');
+>>> /* Signer.signOperation(#target) */
+>>> /* #target must be a dictionary style object or the path of opertaion json file */
+>>> const newOperation = signer.signOperation('operation.json'); // or an object itself instead of the path 'operation.json'
 ```
 
 After signing, above operation must be like below.(Each value is up to input arguments and time)
