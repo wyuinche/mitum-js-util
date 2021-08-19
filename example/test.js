@@ -43,4 +43,4 @@ const seal = generator.createSeal(t3_priv, [createAccounts]);
 
 const parser = Xseal.JSONParser;
 console.log(parser.toJSONString(seal));
-// parser.generateFile(seal, './example/seal.json');
+parser.generateFile(seal, './example/seal.json');

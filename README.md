@@ -1,6 +1,6 @@
 # mitum-js-util
 
-'mitum-js-util' will introduce the usage of [mitum-currency](https://github.com/ProtoconNet/mitum-currency) for Javascript.
+'mitum-js-util' will introduce the usage of [mitum-currency](https://github.com/ProtoconNet/mitum-currency) and [mitum-data-blocksign](https://github.com/ProtoconNet/mitum-data-blocksign) for Javascript.
 
 ## Installation
 
@@ -46,13 +46,19 @@ $ npm link mitumc
 
 ### Operations
 
-'mitum-js-util' provides three operations to be generated,
+'mitum-js-util' provides three operations of 'mitum-currency',
 
 * 'Create-Accounts' creates an account corresponding to any public key with a pre-registered account.
 * 'Key-Updater' updates the public key of the account to something else.
 * 'Transfers' transfers tokens from the account to another account.
 
 'mitum-currency' supports various kinds of operations, but 'mitum-js-util' will provide these frequently used operations.
+
+In addition, 'mitum-js-util' provides three operations of 'mitum-data-blocksign',
+
+* 'Create-Documents' creates an document with filehash.
+* 'Sign-Documents' signs the document.
+* 'Transfer-Documents' transfers documents from the account to another account.
 
 ### Prerequisite
 
@@ -62,6 +68,11 @@ Before generating new operation, you should check below,
 * 'public address' of source account
 * 'public key' of target account
 * 'network id'
+
+Additionally, you should check below for 'mitum-data-blocksign',
+
+* 'filehash' for Create-Documents
+* 'owner' and 'documentid' for Sign-Documents and Transfer-Documents
 
 Notice that the package name of 'mitum-js-util' is 'mitumc' for js codes.
 
@@ -81,9 +92,13 @@ Modules that 'Generator' supports are,
 >>> Generator.createAmounts(amounts) 
 >>> Generator.createCreateAccountsItem(keys_o, amounts)
 >>> Generator.createTransfersItem(receiver, amounts)
+>>> Generator.createCreateDocumentsItem(fileHash, signers, cid)
+>>> Generator.createSignDocumentsItem(owner, did, cid)
+>>> Generator.createTransferDocumentsItem(owner, receiver, did, cid)
 >>> Generator.createCreateAccountsFact(sender, items)
 >>> Generator.createKeyUpdaterFact(target, cid, keys_o)
 >>> Generator.createTransfersFact(sender, items)
+>>> Generator.createBlockSignFact(factType, sender, items)
 >>> Generator.createOperation(fact, memo)
 >>> Generator.createSeal(signKey, operations)
 
@@ -190,6 +205,73 @@ To generate an operation, you must prepare target address, not public key. Trans
 >>> const transfers = generator.createOperation(transfersFact, "");
 
 >>> transfers.addSign(source_priv);
+```
+
+### Generate Create-Documents
+
+To generate an operation, you must prepare file-hash. Create-Document supports to create documents with setting signers who must sign them.
+
+#### Usage
+
+```js
+>>> const mitumc = require('mitumc');
+>>> const generator = new mitumc.Generator('mitum');
+
+>>> const sourcePriv = "L5GTSKkRs9NPsXwYgACZdodNUJqCAWjz2BccuR4cAgxJumEZWjok:btc-priv-v0.0.1";
+>>> const sourceAddr = "GbymDFuVmJwP4bjjyYu4L6xgBfUmdceufrMDdn4x1oz:mca-v0.0.1";
+
+>>> const createDocumentsItem = generator.createCreateDocumentsItem("abcd:mbfh-v0.0.1", [], "MCC")
+
+>>> const createDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_CREATE_DOCUMENTS, sourceAddr, [createDocumentsItem])
+
+>>> const createDocuments = generator.createOperation(createDocumentsFact, "");
+
+>>> createDocuments.addSign(sourcePriv);
+```
+
+### Generate Sign-Documents
+
+To generate an operation, you must prepare owner and document id. Sign-Document supports to sign documents registered by 'mitum-data-blocksign'
+
+#### Usage
+
+```js
+>>> const mitumc = require('mitumc');
+>>> const generator = new mitumc.Generator('mitum');
+
+>>> const sourcePriv = "L5GTSKkRs9NPsXwYgACZdodNUJqCAWjz2BccuR4cAgxJumEZWjok:btc-priv-v0.0.1";
+>>> const sourceAddr = "GbymDFuVmJwP4bjjyYu4L6xgBfUmdceufrMDdn4x1oz:mca-v0.0.1";
+
+>>> const signDocumentsItem = generator.createSignDocumentsItem(sourceAddr, 1, "MCC");
+
+>>> const signDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_SIGN_DOCUMENTS, sourceAddr, [signDocumentsItem]);
+
+>>> const SignDocuments = generator.createOperation(signDocumentsFact, "");
+
+>>> SignDocuments.addSign(sourcePriv);
+```
+
+### Generate Sign-Documents
+
+To generate an operation, you must prepare owner and document id. Transfer-Document supports to transfer documents to other account.
+
+#### Usage
+
+```js
+>>> const mitumc = require('mitumc');
+>>> const generator = new mitumc.Generator('mitum');
+
+>>> const sourcePriv = "L5GTSKkRs9NPsXwYgACZdodNUJqCAWjz2BccuR4cAgxJumEZWjok:btc-priv-v0.0.1";
+>>> const sourceAddr = "GbymDFuVmJwP4bjjyYu4L6xgBfUmdceufrMDdn4x1oz:mca-v0.0.1";
+>>> const targetAddr = "ATDxH32CL7hdrpgLcvtNroNTF111V6wUJCK5JTa4f8Po:mca-v0.0.1";
+
+>>> const transferDocumentsItem = generator.createTransferDocumentsItem(sourceAddr, targetAddr, 1, "MCC");
+
+>>> const transferDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_TRANSFER_DOCUMENTS, sourceAddr, [transferDocumentsItem]);
+
+>>> const transferDocuments = generator.createOperation(transferDocumentsFact, "");
+
+>>> transferDocuments.addSign(sourcePriv);
 ```
 
 ## Generate New Seal
