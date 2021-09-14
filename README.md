@@ -6,17 +6,8 @@
 
 Recommended requirements for 'mitum-js-util' are,
 
-* node v12.22.1
-* npm v6.14.12
-
-and
-
-* bs58 v4.0.1
-* bs58check v2.1.2
-* eccrypto-js v5.4.0
-* elliptic v6.5.4
-* secp256k1 v4.0.2
-* stellar-sdk v4.0.2
+* node v12.22.1 or later
+* npm v6.14.12 or later
 
 ```sh
 $ node --version
