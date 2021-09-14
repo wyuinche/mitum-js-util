@@ -92,7 +92,7 @@ Modules that 'Generator' supports are,
 >>> Generator.createAmounts(amounts) 
 >>> Generator.createCreateAccountsItem(keys_o, amounts)
 >>> Generator.createTransfersItem(receiver, amounts)
->>> Generator.createCreateDocumentsItem(fileHash, signers, cid)
+>>> Generator.createCreateDocumentsItem(fileHash, did, signcode, title, size, cid, signers, signcodes)
 >>> Generator.createSignDocumentsItem(owner, did, cid)
 >>> Generator.createTransferDocumentsItem(owner, receiver, did, cid)
 >>> Generator.createCreateAccountsFact(sender, items)
@@ -220,7 +220,7 @@ To generate an operation, you must prepare file-hash. Create-Document supports t
 >>> const sourcePriv = "L5GTSKkRs9NPsXwYgACZdodNUJqCAWjz2BccuR4cAgxJumEZWjok:btc-priv-v0.0.1";
 >>> const sourceAddr = "GbymDFuVmJwP4bjjyYu4L6xgBfUmdceufrMDdn4x1oz:mca-v0.0.1";
 
->>> const createDocumentsItem = generator.createCreateDocumentsItem("abcd:mbfh-v0.0.1", [], "MCC")
+>>> const createDocumentsItem = createCreateDocumentsItem("abcdabc:mbfh-v0.0.1", 200, "user01", "title200", 1234, "MCC", [], ["user02"])
 
 >>> const createDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_CREATE_DOCUMENTS, sourceAddr, [createDocumentsItem])
 
@@ -251,9 +251,11 @@ To generate an operation, you must prepare owner and document id. Sign-Document 
 >>> SignDocuments.addSign(sourcePriv);
 ```
 
-### Generate Transfer-Documents
+### ~~Generate Transfer-Documents~~
 
-To generate an operation, you must prepare owner and document id. Transfer-Document supports to transfer documents to other account.
+<u>This operation is not supported anymore.</u>
+
+~~To generate an operation, you must prepare owner and document id. Transfer-Document supports to transfer documents to other account.~~
 
 #### Usage
 

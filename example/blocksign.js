@@ -12,7 +12,7 @@ const pub1 = "GBMWRVVIY2SHIMLG3ZQR54WGXKG5RYXFHGC2HNT3W674DLXK6VQ4QY4X:stellar-p
 const addr1 = "ATDxH32CL7hdrpgLcvtNroNTF111V6wUJCK5JTa4f8Po:mca-v0.0.1"
 
 // CreateDocumentsItem
-const createDocumentsItem = generator.createCreateDocumentsItem("abcd:mbfh-v0.0.1", [], "MCC")
+const createDocumentsItem = generator.createCreateDocumentsItem("abcdabc:mbfh-v0.0.1", 200, "user01", "title200", 1234, "MCC", [], ["user02"])
 
 // CreateDocumentsFact
 const createDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_CREATE_DOCUMENTS, source_addr, [createDocumentsItem])
