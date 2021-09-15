@@ -20,8 +20,8 @@ const t3_addr = "Fvwhx4TvqkhLQJMoUqXWwnR76Gxv7Rcz6ZxaSdYEVUaX:mca-v0.0.1";
 
 
 // Create Accounts
-const key = generator.formatKey(t1_pub, 100);
-const keys = generator.createKeys([key], 100);
+const key = generator.formatKey(t1_pub, 100); // publickey, weight
+const keys = generator.createKeys([key], 100); // [], threshold
 const amount = generator.formatAmount(1000000000, "MCC");
 const amounts = generator.createAmounts([amount]);
 const createAccountsItem = generator.createCreateAccountsItem(keys, amounts);

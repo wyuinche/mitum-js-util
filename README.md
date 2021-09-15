@@ -99,6 +99,8 @@ netID
 
 You can check use-cases of Generator in the next part.
 
+__! If you want to get keypair for mitumc, go 'Generate Keypair' first. !__
+
 ### Generate Create-Accounts 
 
 For new account, 'currency id' and 'initial amount' must be set. With source account, you can create and register new account of target public key.
@@ -360,23 +362,23 @@ Sign message with btc, ether, stellar keypair.
 >>> const ethkp = mitumc.getKeypair('ether'); // returns ETHKeyPair
 >>> const stlkp = mitumc.getKeypair('stellar'); // returns StellarKeyPair
 
->>> btckp.privKey.key
-'Kx8iQPN3jiHcyKQDrsMitKqWPfMfoRZY5HtgeTi5z4ka96M4WuzV'
+>>> btckp.getPrivateKey();
+'KxZSDTbRvDCYtfaDcPcf2e97YuGPUA1Ag169WEa9TT5L9zvGUb2n:btc-priv-v0.0.1'
 
->>> btckp.pubKey
-'yX6ZF6hEyUeB982tVGLRwVXkMpXmWFYcUTrbrLrtP82K'
+>>> btckp.getPublicKey();
+'29TcoNh2yFmrZm5V8x5JL5f7wKvFs5mgxSZqTPAVpvksN:btc-pub-v0.0.1'
 
->>> ethkp.privKey.key
-'ed2cbba9ca8275589fb34077a71eb644532c3a5da99bc45bf5240860e92ef206'
+>>> ethkp.getPrivateKey();
+'609b6a6f4e1d276affceb7a958c9c97c65fbe9aad179471db3eb7165b5bf3ee9:ether-priv-v0.0.1'
 
->>> ethkp.pubKey
-'0444d85b17c09878a78faf79dbd556c8dba98fc54b5e731724f748afe157e3fe9b1feb7130734a5f5aef96d9a4c42e1b53946d6e0bb35b133219ce296897ed864e'
+>>> ethkp.getPublicKey();
+'047b83ef60db6236413d12e09c5bb6d652beee9e3777ca17fa7b19a3dca1e3cc3989389f98762b9b3530c63d6d2809ef3d3188777844ebbf71ed3251fa83a9c905:ether-pub-v0.0.1'
 
->>> stlkp.privkey.key
-'SDPOMCTDYBZVVLSXSBDLR6TFGY6C7EPPVJXCSYF7XLH7B3WMY5EWE6A7'
+>>> stlkp.getPrivateKey();
+'SCJXZLP3DF64BHYW7WDKUVEBSJKLWB4SQ7Z7GIRYKDX56HADHMCCBISZ:stellar-priv-v0.0.1'
 
->>> stlkp.pubKey
-'GCCLMGH7QKO6NI4OJ42YRLADR6XSVZQEOMRSCB4BROY6PAX4Z3WC264A'
+>>> stlkp.getPublicKey();
+'GBQ5GDMNMB6LXIM5VT2BKTNL7WPYGZXX2R2ULLLNKFXMPGHMHZSSWYYR:stellar-pub-v0.0.1'
 ```
 
 Note that 'mitumc.getKeypair()' and 'mitumc.toKeypair()' provides compressed btc key - aka compressed wif.

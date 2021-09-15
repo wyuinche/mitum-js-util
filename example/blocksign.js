@@ -13,18 +13,21 @@ const addr1 = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1"
 
 // CreateDocumentsItem
 const createDocumentsItem = generator.createCreateDocumentsItem("abcdabc:mbfh-v0.0.1", 150, "user01", "title150", 1234, "MCC", [addr1], ["user02"]);
+                                                                // file hash, document id, signcode, title, size, currency id, signers, signcodes
 
 // CreateDocumentsFact
 const createDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_CREATE_DOCUMENTS, source_addr, [createDocumentsItem])
-
+                                                            // blocksign operation type, sender, items
+                                                        
 // CreateDocuments
-const createDocuments = generator.createOperation(createDocumentsFact, "");
+const createDocuments = generator.createOperation(createDocumentsFact, ""); // fact, memo
 createDocuments.addSign(source_priv);
 
 parser.generateFile(createDocuments.dict(), './example/create_documents.json');
 
+
 // SignDocumentsItem
-const signDocumentsItem = generator.createSignDocumentsItem(source_addr, 150, "MCC");
+const signDocumentsItem = generator.createSignDocumentsItem(source_addr, 150, "MCC"); // creater/owner, documentid, currency id
 
 // SignDocumentsFact
 const signDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_SIGN_DOCUMENTS, addr1, [signDocumentsItem]);
