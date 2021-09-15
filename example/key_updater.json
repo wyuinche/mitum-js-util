@@ -1,0 +1,32 @@
+{
+    "memo": "",
+    "_hint": "mitum-currency-keyupdater-operation-v0.0.1",
+    "fact": {
+        "_hint": "mitum-currency-keyupdater-operation-fact-v0.0.1",
+        "hash": "5BLjn4oMqFeo4UDMqnQkkLmDRLypyuoZ5tYP8T7fdkP4",
+        "token": "MjAyMS0wOS0xNVQwMjo0ODozOS4yNTha",
+        "target": "G6mRkczkChCfGEV9qT8h9V3TeUdagxSpbN4KMuC2LtoV:mca-v0.0.1",
+        "keys": {
+            "_hint": "mitum-currency-keys-v0.0.1",
+            "hash": "3mUWvUYfujVgFi3HVMzxKWfcKv7amXHsw3kPnp4w3Eer",
+            "keys": [
+                {
+                    "_hint": "mitum-currency-key-v0.0.1",
+                    "weight": 100,
+                    "key": "0422a860ed96a917c41d95b50d61e0d34fb0f7aa1f0b47dca5dc2ad9b7514497aa94ad8e62f3b1a9e877fee95075b7003f8c432b37eb90f2f01ed1cee4f31879ae:ether-pub-v0.0.1"
+                }
+            ],
+            "threshold": 100
+        },
+        "currency": "MCC"
+    },
+    "hash": "3LVaaEk7vjdybQqZ4TX2u49dJ9JPBg5LsodA3aq1yisk",
+    "fact_signs": [
+        {
+            "_hint": "base-fact-sign-v0.0.1",
+            "signer": "GCSFDZ63ZGFWHN3M4XNAZKPLKWEEW32BMTM3KSVK4IFY7JCUVNF6GPNH:stellar-pub-v0.0.1",
+            "signature": "66xXJfNLQeb9e1fVgQCQQZLkRFAvTqZDJB7guobj5ihcwvdpSiM4gH3Bxb9EL4aLPEDUzdGVhb2EgR9Aovz5fTdj",
+            "signed_at": "2021-09-15T02:48:39.280Z"
+        }
+    ]
+}

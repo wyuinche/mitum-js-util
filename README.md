@@ -111,9 +111,9 @@ When you use 'Generator', you must set 'network id' before you create something.
 >>> const mitumc = require('mitumc');
 >>> const generator = new mitumc.Generator('mitum');
 
->>> const sourcePriv = "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-priv-v0.0.1";
->>> const sourceAddr = "EbVibuKTyPqRVRcCpMRQdP7wBkr33GW2brSQvZQNJDSn:mca-v0.0.1";
->>> const targetPub = "GC4HJHQ2IAW4YTH7KLDE6BSC5WRTEPYZ625LPL4FGFUFGKWK2I7YWRYB:stellar-pub-v0.0.1";
+>>> const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
+>>> const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
+>>> const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPC:btc-pub-v0.0.1";
 
 >>> const key = generator.formatKey(targetPub, 100);
 >>> const keys = generator.createKeys([key], 100);
@@ -134,22 +134,26 @@ Then Operation.dict() methods work correctly.
 
 ```js
 >>> createAccounts.dict();
-{ memo: '',
+{
+  memo: '',
   _hint: 'mitum-currency-create-accounts-operation-v0.0.1',
-  fact:
-   { _hint: 'mitum-currency-create-accounts-operation-fact-v0.0.1',
-     hash: '5wgeuNYFqWqr99ExN1jWK4PTTgH3atcRpqkJ8qSTWKi6',
-     token: 'MjAyMS0wNi0xNFQwMzo0OTo1Ny4wMDJa',
-     sender: 'EbVibuKTyPqRVRcCpMRQdP7wBkr33GW2brSQvZQNJDSn:mca-v0.0.1',
-     items: [ [Object] ] },
-  hash: '4wZ6Qc8qk4qc92RsNsVgg13uLcSXuU1WbYaK89yoBjz5',
-  fact_signs:
-   [ { _hint: 'base-fact-sign-v0.0.1',
-       signer:
-        'cnMJqt1Q7LXKqFAWprm6FBC7fRbWQeZhrymTavN11PKJ:btc-pub-v0.0.1',
-       signature:
-        'AN1rKvtkNiWEtLpfpz6T3XQEDQd2JCsUQRdrL4wwy7w3yqrPYFqtbPGR6uBqVLpEVAY2G2nrQZZsn5Ei5ycvvF4QGuTr6ckXE',
-       signed_at: '2021-06-14T03:50:16.123Z' } ] }
+  fact: {
+    _hint: 'mitum-currency-create-accounts-operation-fact-v0.0.1',
+    hash: '7tQBLVfEUMsuoCQMJ9vrX673iM95zS8VNA2EgpPZ5EMx',
+    token: 'MjAyMS0wOS0xNVQwMjo0MDowNy42ODJa',
+    sender: '6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1',
+    items: [ [Object] ]
+  },
+  hash: 'ENpvX6mJyQSnRpaugCtFqdr5msSGe6ie54SiBTP37Lyw',
+  fact_signs: [
+    {
+      _hint: 'base-fact-sign-v0.0.1',
+      signer: 'GCSFDZ63ZGFWHN3M4XNAZKPLKWEEW32BMTM3KSVK4IFY7JCUVNF6GPNH:stellar-pub-v0.0.1',
+      signature: '5pLigmGZvTZciRUmkhxTCAAbn9uBGvb1B5JPHUCFTXfu24HFrUxAvFmnRVTUTvJ8BTenpyg7W9NfrYsmSe3iFshw',
+      signed_at: '2021-09-15T02:40:07.733Z'
+    }
+  ]
+}
 ```
 
 ### Generate Key-Updater
@@ -162,9 +166,9 @@ Key-Updater literally supports to update source public key to something else.
 >>> const mitumc = require('mitumc');
 >>> const generator = new mitumc.Generator('mitum');
 
->>> const sourcePriv = "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-priv-v0.0.1";
->>> const toPub = "04a38bb1568ae40d2a50e7c0d36357a51f4152125a50105a7dd24d517a4e23bfb109342ace92752d21db62bf3839dd482b82b315a86f56454213a8252b0af45d03:ether-pub-v0.0.1";
->>> const fromAddr = "GYJMxzXsgUbhayJvG34HAVT6288EYEkUxdyghDhjibtv:mca-v0.0.1";
+>>> const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
+>>> const toPub = "0422a860ed96a917c41d95b50d61e0d34fb0f7aa1f0b47dca5dc2ad9b7514497aa94ad8e62f3b1a9e877fee95075b7003f8c432b37eb90f2f01ed1cee4f31879ae:ether-pub-v0.0.1";
+>>> const fromAddr = "G6mRkczkChCfGEV9qT8h9V3TeUdagxSpbN4KMuC2LtoV:mca-v0.0.1";
 
 >>> const key = generator.formatKey(toPub, 100);
 >>> const keys = generator.createKeys([key], 100);
@@ -208,10 +212,11 @@ To generate an operation, you must prepare file-hash. Create-Document supports t
 >>> const mitumc = require('mitumc');
 >>> const generator = new mitumc.Generator('mitum');
 
->>> const sourcePriv = "L5GTSKkRs9NPsXwYgACZdodNUJqCAWjz2BccuR4cAgxJumEZWjok:btc-priv-v0.0.1";
->>> const sourceAddr = "GbymDFuVmJwP4bjjyYu4L6xgBfUmdceufrMDdn4x1oz:mca-v0.0.1";
+>>> const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
+>>> const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
+>>> const signer = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1";
 
->>> const createDocumentsItem = createCreateDocumentsItem("abcdabc:mbfh-v0.0.1", 200, "user01", "title200", 1234, "MCC", [], ["user02"])
+>>> const createDocumentsItem = generator.createCreateDocumentsItem("abcdabc:mbfh-v0.0.1", 150, "user01", "title150", 1234, "MCC", [signer], ["user02"]);
 
 >>> const createDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_CREATE_DOCUMENTS, sourceAddr, [createDocumentsItem])
 
@@ -230,16 +235,18 @@ To generate an operation, you must prepare owner and document id. Sign-Document 
 >>> const mitumc = require('mitumc');
 >>> const generator = new mitumc.Generator('mitum');
 
->>> const sourcePriv = "L5GTSKkRs9NPsXwYgACZdodNUJqCAWjz2BccuR4cAgxJumEZWjok:btc-priv-v0.0.1";
->>> const sourceAddr = "GbymDFuVmJwP4bjjyYu4L6xgBfUmdceufrMDdn4x1oz:mca-v0.0.1";
+>>> const owner = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
 
->>> const signDocumentsItem = generator.createSignDocumentsItem(sourceAddr, 1, "MCC");
+>>> const senderPriv = "SDASY3GHXQUUJGPVMGB6PVPJYQZA5VGNY7PKG3O3OIVJ5AOTGR7CDWCS:stellar-priv-v0.0.1";
+>>> const senderAddr = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1";
 
->>> const signDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_SIGN_DOCUMENTS, sourceAddr, [signDocumentsItem]);
+>>> const signDocumentsItem = generator.createSignDocumentsItem(owner, 1, "MCC");
+
+>>> const signDocumentsFact = generator.createBlockSignFact(generator.BLOCKSIGN_SIGN_DOCUMENTS, senderAddr, [signDocumentsItem]);
 
 >>> const SignDocuments = generator.createOperation(signDocumentsFact, "");
 
->>> SignDocuments.addSign(sourcePriv);
+>>> SignDocuments.addSign(senderPriv);
 ```
 
 ### ~~Generate Transfer-Documents~~
@@ -254,9 +261,9 @@ To generate an operation, you must prepare owner and document id. Sign-Document 
 >>> const mitumc = require('mitumc');
 >>> const generator = new mitumc.Generator('mitum');
 
->>> const sourcePriv = "L5GTSKkRs9NPsXwYgACZdodNUJqCAWjz2BccuR4cAgxJumEZWjok:btc-priv-v0.0.1";
->>> const sourceAddr = "GbymDFuVmJwP4bjjyYu4L6xgBfUmdceufrMDdn4x1oz:mca-v0.0.1";
->>> const targetAddr = "ATDxH32CL7hdrpgLcvtNroNTF111V6wUJCK5JTa4f8Po:mca-v0.0.1";
+>>> const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
+>>> const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
+>>> const targetAddr = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ:mca-v0.0.1";
 
 >>> const transferDocumentsItem = generator.createTransferDocumentsItem(sourceAddr, targetAddr, 1, "MCC");
 
@@ -309,9 +316,9 @@ First of all, suppose that every operation is that generated by 'Generator'. (cr
 // See above sections.
 // ...
 
->>> const signer = "L4p6NAjJWERn5q4PAepPo6o7VP5qRboXSX1DA5zggJ61uY2vdhf5:btc-priv-v0.0.1";
+>>> const signer = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
 
->>> const operations = [createAccounts, keyUpdater, transfers];
+>>> const operations = [createAccounts];
 >>> const seal = generator.createSeal(signer, operations);
 
 >>> parser.toJSONString(seal);
