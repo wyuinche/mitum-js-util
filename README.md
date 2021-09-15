@@ -120,6 +120,12 @@ When you use 'Generator', you must set 'network id' before you create something.
 >>> const key = generator.formatKey(targetPub, 100);
 >>> const keys = generator.createKeys([key], 100);
 
+/* If you want to get address of keys, use 'Keys.address'.
+ * 
+ * >>> keys = generator.createKeys([key], 100);
+ * >>> keys.address;
+ */
+
 >>> const amount = generator.formatAmount(100, "MCC");
 >>> const amounts = generator.createAmounts([amount]);
 
