@@ -2,9 +2,13 @@ const Xseal = require('../lib/seal');
 
 const generator = new Xseal.Generator("mitum");
 
-const source_priv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
-const source_pub = "GCSFDZ63ZGFWHN3M4XNAZKPLKWEEW32BMTM3KSVK4IFY7JCUVNF6GPNH:stellar-pub-v0.0.1";
-const source_addr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
+// const source_priv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3:stellar-priv-v0.0.1";
+// const source_pub = "GCSFDZ63ZGFWHN3M4XNAZKPLKWEEW32BMTM3KSVK4IFY7JCUVNF6GPNH:stellar-pub-v0.0.1";
+// const source_addr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi:mca-v0.0.1";
+
+const source_priv = "L5GTSKkRs9NPsXwYgACZdodNUJqCAWjz2BccuR4cAgxJumEZWjok:btc-priv-v0.0.1";
+const source_pub = "rcrd3KA2wWNhKdAP8rHRzfRmgp91oR9mqopckyXRmCvG:btc-pub-v0.0.1";
+const source_addr = "GbymDFuVmJwP4bjjyYu4L6xgBfUmdceufrMDdn4x1oz:mca-v0.0.1";
 
 const t1_priv = "L3uk75d86TZe6UbtMGQazs8YhpMshuRYFeZx5LgiF9NTD1fjLJcp:btc-priv-v0.0.1";
 const t1_pub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPC:btc-pub-v0.0.1";
@@ -20,7 +24,7 @@ const t3_addr = "Fvwhx4TvqkhLQJMoUqXWwnR76Gxv7Rcz6ZxaSdYEVUaX:mca-v0.0.1";
 
 
 // Create Accounts
-const key = generator.formatKey(t1_pub, 100); // publickey, weight
+const key = generator.formatKey("21CvfaQbiSVb8mmGfkZHHdmuYUiCdg32QriSvFVNFJNgJ:btc-pub-v0.0.1", 100); // publickey, weight
 const keys = generator.createKeys([key], 100); // [], threshold
 const amount = generator.formatAmount(1000000000, "MCC");
 const amounts = generator.createAmounts([amount]);
@@ -53,6 +57,6 @@ const seal = generator.createSeal(t3_priv, [createAccounts]);
 // Create JSON Files
 const parser = Xseal.JSONParser;
 parser.generateFile(createAccounts.dict(), './example/create_accounts.json');
-parser.generateFile(keyUpdater.dict(), './example/key_updater.json');
-parser.generateFile(transfers.dict(), './example/transfers.json');
-parser.generateFile(seal, './example/seal.json');
+// parser.generateFile(keyUpdater.dict(), './example/key_updater.json');
+// parser.generateFile(transfers.dict(), './example/transfers.json');
+// parser.generateFile(seal, './example/seal.json');
