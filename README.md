@@ -11,10 +11,10 @@ Recommended requirements for 'mitum-js-util' are,
 
 ```sh
 $ node --version
-vv12.22.1
+v12.22.1
 
 $ npm --version
-6.14.12
+v6.14.12
 ```
 Notice: the package name of 'mitum-js-util' is 'mitumc'.
 
