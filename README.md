@@ -23,6 +23,29 @@ $ npm install mitumc
 added 74 packages, and audited 75 packages in 23s
 ```
 
+## Index
+
+||Title|
+|---|---|
+|1|[Generate New Keypairs](#generate-new-keypairs)|
+|2|[Generate New Operation](#generate-new-operation)|
+|2-1|[Get Address of New Account](#get-address-of-new-account)|
+|2-2|[Generate Create-Accounts](#generate-create-accounts)|
+|2-3|[Generate Key-Updater](#generate-key-updater)|
+|2-4|[Generate Transfers](#generate-transfers)|
+|2-5|[Generate Create-Documents](#generate-create-documents)|
+|2-6|[Generate Sign-Documents](#generate-sign-documents)|
+|2-7|[Generate Transfer-Documents](#generate-transfer-documents)|
+|3|[Generate New Seal](#generate-new-seal)|
+|4|[Send Seal to Network](#send-seal-to-network)|
+|5|[Sign Message](#sign-message)|
+|6|[Add Fact Signature to Operation](#add-fact-signature-to-operation)|
+
+|Class|
+|---|
+|[Generator](#generator)|
+|[JSONParser](#jsonparser)|
+
 ## Generate New Keypairs
 
 'mitumc' supports to generate btc, ether, stellar keypairs for mitum-currency.
@@ -127,7 +150,7 @@ Modules that 'Generator' supports are,
 ```js
 Generator.setNetworkID(netID)
 Generator.formatKey(key, weight)
-Generator.formatAmount(big, cid)
+Generator.formatAmount(big, cid) // typeof big === "string" or "bigint" for $big > Number.MAX_SAFE_INTEGER, or === "number" for small $big
 Generator.createKeys(keys, threshold)
 Generator.createAmounts(amounts) 
 Generator.createCreateAccountsItem(keys_o, amounts)
@@ -147,6 +170,32 @@ netID
 ```
 
 You can check use-cases of Generator in the next part.
+
+### Get Address of New Account
+
+First of all, 'Keys' object must be made. Use 'formatKey' and 'createKeys' of Generator.
+
+```js
+import { Generator } from 'mitumc';
+
+/*
+* 'mitum' is network id. Put your own one.
+* Or you don't have to put network id if you want just to get address.
+*/
+const generator = new Generator('mitum');
+
+const pub1 = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPC:btc-pub-v0.0.1";
+const pub2 = "GBOT4UVZPRDYDFZF7NHJQO332IFQU7L6UGUPNJYO2AIBSGDRW32NJZ5A:stellar-pub-v0.0.1"
+const pub3 = "0422a860ed96a917c41d95b50d61e0d34fb0f7aa1f0b47dca5dc2ad9b7514497aa94ad8e62f3b1a9e877fee95075b7003f8c432b37eb90f2f01ed1cee4f31879ae:ether-pub-v0.0.1"
+
+const key1 = generator.formatKey(pub1, 30); // public key in the account & weight
+const key2 = generator.formatKey(pub2, 30);
+const key3 = generator.formatKey(pub3, 40);
+
+const keys = generator.createKeys([pub1, pub2, pub3], 100); // key list & threshold
+
+const address = keys.address; // address of the account as string
+```
 
 __! If you want to get keypair for mitumc, go 'Generate New Keypairs' first. !__
 
@@ -174,12 +223,6 @@ const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPC:btc-pub-v0.0.1";
 
 const key = generator.formatKey(targetPub, 100);
 const keys = generator.createKeys([key], 100);
-
-/* If you want to get address of keys, use 'Keys.address'.
- * 
- * keys = generator.createKeys([key], 100);
- * keys.address;
- */
 
 const amount = generator.formatAmount(100, "MCC");
 const amounts = generator.createAmounts([amount]);
@@ -420,7 +463,7 @@ Sign message with btc, ether, stellar keypair.
 
 ### Usage
 
-#### Sign Message
+#### Sign String/Bytes
 
 Each keypair supports 'sign' method that generates Buffer format signature by signing Buffer format message.
 

@@ -3,5 +3,6 @@ module.exports = {
     JSONParser: require('./lib/seal').JSONParser,
     getKeypair: require('./lib/key').getKeypair,
     toKeypair: require('./lib/key').toKeypair,
-    Signer: require('./lib/seal').Signer
+    Signer: require('./lib/seal').Signer,
+    BigInteger: require('./lib/util').BigInteger,
 };

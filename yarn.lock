@@ -60,6 +60,11 @@
   "resolved" "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
   "version" "1.5.1"
 
+"big-integer@^1.6.50":
+  "integrity" "sha512-+O2uoQWFRo8ysZNo/rjtri2jIwjr3XfeAgRjAUADRqGG+ZITvyn8J1kvXLTaKVr3hhGXk+f23tKfdzmklVM9vQ=="
+  "resolved" "https://registry.npmjs.org/big-integer/-/big-integer-1.6.50.tgz"
+  "version" "1.6.50"
+
 "bignumber.js@^4.0.0":
   "integrity" "sha512-eJzYkFYy9L4JzXsbymsFn3p54D+llV27oTQ+ziJG7WFRheJcNZilgVXMG0LoZtlQSKBsJdWtLFqOD0u+U0jZKA=="
   "resolved" "https://registry.npmjs.org/bignumber.js/-/bignumber.js-4.1.0.tgz"
