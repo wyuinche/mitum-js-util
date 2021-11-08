@@ -149,9 +149,9 @@ Modules that 'Generator' supports are,
 
 ```js
 Generator.setNetworkID(netID)
-Generator.formatKey(key, weight)
-Generator.formatAmount(big, cid) // typeof big === "string" or "bigint" for $big > Number.MAX_SAFE_INTEGER, or === "number" for small $big
-Generator.createKeys(keys, threshold)
+Generator.formatKey(key, weight) // 1 <= $weight <= 100
+Generator.formatAmount(big, cid) // typeof $big === "string" 
+Generator.createKeys(keys, threshold) // 1 <= $threshold <= 100
 Generator.createAmounts(amounts) 
 Generator.createCreateAccountsItem(keys_o, amounts)
 Generator.createTransfersItem(receiver, amounts)
@@ -174,6 +174,8 @@ You can check use-cases of Generator in the next part.
 ### Get Address of New Account
 
 First of all, 'Keys' object must be made. Use 'formatKey' and 'createKeys' of Generator.
+
+Note that 1 <= `threshold`, `weight` <= 100.
 
 ```js
 import { Generator } from 'mitumc';
@@ -224,7 +226,7 @@ const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPC:btc-pub-v0.0.1";
 const key = generator.formatKey(targetPub, 100);
 const keys = generator.createKeys([key], 100);
 
-const amount = generator.formatAmount(100, "MCC");
+const amount = generator.formatAmount("100", "MCC");
 const amounts = generator.createAmounts([amount]);
 
 const createAccountsItem = generator.createCreateAccountsItem(keys, amounts);
@@ -300,7 +302,7 @@ const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networ
 const sourcePriv = "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek:btc-priv-v0.0.1";
 const targetAddr = "GYJMxzXsgUbhayJvG34HAVT6288EYEkUxdyghDhjibtv:mca-v0.0.1";
 
-const amount = generator.formatAmount(100, "MCC");
+const amount = generator.formatAmount("100", "MCC");
 const amounts = generator.createAmounts([amount]);
 
 const transfersItem = generator.createTransfersItem(targetAddr, amounts);
