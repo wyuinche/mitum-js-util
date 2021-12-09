@@ -6,15 +6,15 @@
 
 Recommended requirements for 'mitum-js-util' are,
 
-* node v12.22.1 or later
-* npm v6.14.12 or later
+* node v16.10.0 or later
+* npm v7.24.0 or later
 
 ```sh
 $ node --version
-v12.22.1
+v16.10.0
 
 $ npm --version
-v6.14.12
+7.24.0
 ```
 Notice: the package name of 'mitum-js-util' is 'mitumc'.
 
@@ -58,59 +58,75 @@ added 74 packages, and audited 75 packages in 23s
 
 'mitumc' supports to generate btc, ether, stellar keypairs for mitum-currency.
 
+Note that there are respective type suffix to each private key, public key, and mitum-currency address.
+
+* private key: mpr
+* public key: mpu
+* address: mca
+
 ### Methods 
 
-There are two methods to generate keypairs. getKeypair and toKeypair.
+There is a method to generate keypairs without any seed. `getNewKeypair()`.
+
+First, it creates a btc private key and use its compressed wif as seed for new Keypair.
+
+If you have `seed` for new Keypair, use `getKeypairFromSeed(seed)`.
+
+Also you can import your own private key to Keypair by `getKeypairFromPrivateKey(key)`.
 
 ```js
-getKeypair('btc') // generate btc keypair
-getKeypair('ether') // generate ether keypair
-gerKeypair('stellar') // generate stellar keypair
+/* Generate new Keypair without seed */
+getNewKeypair()
 
-// generate keypair from hinted key; hint example: btc-priv-v0.0.1, ether-priv-v0.0.1, stellar-priv-v0.0.1
-// version of hint (for example, v0.0.1) is up to mitum or mitum-currency
-toKeypair($hintedKey, '')
+/* Generate new Keypair with seed */
+getKeypairFromSeed(seed)
 
-// generate keypair from raw key(key without hint)
-toKeypair($rawKey, 'btc')
-toKeypair($rawKey, 'ether')
-toKeypair($rawKey, 'stellar')
+/* Generate Keypair from your private key */
+getKeypairFromPrivateKey(key)
 ```
 
 #### Usage
 
+Without any seed,
+
 ```js
-import mitumc from 'mitumc';
+import { getNewKeypair } from 'mitumc';
 
-const btckp = mitumc.getKeypair('btc'); // returns BTCKeyPair
-const ethkp = mitumc.getKeypair('ether'); // returns ETHKeyPair
-const stlkp = mitumc.getKeypair('stellar'); // returns StellarKeyPair
+const kp = getNewKeypair(); // returns Keypair
 
-btckp.getPrivateKey(); // 'KxZSDTbRvDCYtfaDcPcf2e97YuGPUA1Ag169WEa9TT5L9zvGUb2n~btc-priv-v0.0.1'
-btckp.getPublicKey(); // '29TcoNh2yFmrZm5V8x5JL5f7wKvFs5mgxSZqTPAVpvksN~btc-pub-v0.0.1'
+kp.getPrivateKey(); // 'KzF4ia7G8in3hm7TzSr5k7cNtx46BdEFTzVdnh82vAopqxJG8rHompr'
+kp.getPublicKey(); // '25jrVNpKr59bYxrWH8eTkbG1iQ8hjvSFKVpfCcDT8oFf8mpu'
 
-ethkp.getPrivateKey(); // '609b6a6f4e1d276affceb7a958c9c97c65fbe9aad179471db3eb7165b5bf3ee9~ether-priv-v0.0.1'
-ethkp.getPublicKey(); // '047b83ef60db6236413d12e09c5bb6d652beee9e3777ca17fa7b19a3dca1e3cc3989389f98762b9b3530c63d6d2809ef3d3188777844ebbf71ed3251fa83a9c905~ether-pub-v0.0.1'
-
-stlkp.getPrivateKey(); // 'SCJXZLP3DF64BHYW7WDKUVEBSJKLWB4SQ7Z7GIRYKDX56HADHMCCBISZ~stellar-priv-v0.0.1'
-stlkp.getPublicKey(); // 'GBQ5GDMNMB6LXIM5VT2BKTNL7WPYGZXX2R2ULLLNKFXMPGHMHZSSWYYR~stellar-pub-v0.0.1'
+kp.getRawPrivateKey(); // KzF4ia7G8in3hm7TzSr5k7cNtx46BdEFTzVdnh82vAopqxJG8rHo
+kp.getRawPublicKey(); // 25jrVNpKr59bYxrWH8eTkbG1iQ8hjvSFKVpfCcDT8oFf8mpu
 ```
 
-Note that 'mitumc.getKeypair()' and 'mitumc.toKeypair()' provides compressed btc key - aka compressed wif.
-
-Of course, you can get any keypair with your known private key by using 'toKeypair'.
-
-Note that it works with either hintless or hinted keys to generate keypairs. (key-hint ex. btc-priv, ether-pub, etc...) 
+From a seed,
 
 ```js
-import mitumc from 'mitumc';
+import { getKeypairFromSeed } from 'mitumc';
 
-// both work same
-const btckp = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD~btc-priv-v0.0.1", '');
-const btckp2 = mitumc.toKeypair("L2ddEkdgYVBkhtdN8HVXLZk5eAcdqXxecd17FDTobVeFfZNPk2ZD", 'btc'); // returns BTCKeyPair
+const kp = mitumc.getKeypairFromSeed("The length of seed should be longer than 32 characters. This is a seed for the example.");
 
-const ethkp = mitumc.toKeypair("013e56aca7cf88d95aa6535fb6c66f366d449a0380128e0eb656a863b45a5ad5~ether-priv-v0.0.1", ''); // returns ETHKeyPair
-const stlkp = mitumc.toKeypair("SBZV72AJVXGARRY6BYXF5IPNQYWMGZJ5YVF6NIENEEATETDF6LGH4CLL~stellar-priv-v0.0.1", ''); // returns StellarKeyPair
+kp.getPrivateKey(); // Kz5b6UMxnRvgL91UvNMuRoTfUEAUw7htW2z4kV2PEZUCVPFmdbXimpr
+kp.getPublicKey(); //239uA6z7MxkZfwp5zYKZ6eBbRWk38AvxeyzfHGQM8o2H8mpu
+
+kp.getRawPrivateKey(); // Kz5b6UMxnRvgL91UvNMuRoTfUEAUw7htW2z4kV2PEZUCVPFmdbXi
+kp.getRawPublicKey(); //239uA6z7MxkZfwp5zYKZ6eBbRWk38AvxeyzfHGQM8o2H8
+```
+
+From your private key,
+
+```js
+import { getKeypairFromPrivateKey } from 'mitumc';
+
+const kp = mitumc.getKeypairFromPrivateKey("Kz5b6UMxnRvgL91UvNMuRoTfUEAUw7htW2z4kV2PEZUCVPFmdbXimpr");
+
+kp.getPrivateKey(); // Kz5b6UMxnRvgL91UvNMuRoTfUEAUw7htW2z4kV2PEZUCVPFmdbXimpr
+kp.getPublicKey(); // 239uA6z7MxkZfwp5zYKZ6eBbRWk38AvxeyzfHGQM8o2H8mpu
+
+kp.getRawPrivateKey(); // Kz5b6UMxnRvgL91UvNMuRoTfUEAUw7htW2z4kV2PEZUCVPFmdbXi
+kp.getRawPublicKey(); //239uA6z7MxkZfwp5zYKZ6eBbRWk38AvxeyzfHGQM8o2H8
 ```
 
 ## Generate New Operation
@@ -194,17 +210,19 @@ import { Generator } from 'mitumc';
 */
 const generator = new Generator('mitum');
 
-const pub1 = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPC~btc-pub-v0.0.1";
-const pub2 = "GBOT4UVZPRDYDFZF7NHJQO332IFQU7L6UGUPNJYO2AIBSGDRW32NJZ5A~stellar-pub-v0.0.1"
-const pub3 = "0422a860ed96a917c41d95b50d61e0d34fb0f7aa1f0b47dca5dc2ad9b7514497aa94ad8e62f3b1a9e877fee95075b7003f8c432b37eb90f2f01ed1cee4f31879ae~ether-pub-v0.0.1"
+const pub1 = "21nHZiHxhjwXtXXhPFzMvGyAAdCobmZeCC1bT1yLXAaw2mpu"
+const pub2 = "mZKEkm4BnFq6ynq98q4bCEcE4kZhzLSViPbCx8LDBXk2mpu"
+const pub3 = "dPBms4cH4t8tiH6uNbq37HrEWwgrrEZqHQwSbvqEBJ85mpu"
 
 const key1 = generator.formatKey(pub1, 30); // public key in the account & weight
 const key2 = generator.formatKey(pub2, 30);
 const key3 = generator.formatKey(pub3, 40);
 
-const keys = generator.createKeys([pub1, pub2, pub3], 100); // key list & threshold
+const keys = generator.createKeys([key1, key2, key3], 100); // key list & threshold
 
 const address = keys.address; // address of the account as string
+
+keys.address // 5KYgKnSyGHECJngakyzHDBt58xt1FJJiUUkCXnjcFySpmca
 ```
 
 __! If you want to get keypair for mitumc, go 'Generate New Keypairs' first. !__
@@ -227,9 +245,9 @@ import mitumc from 'mitumc';
  */
 const generator = new mitumc.Generator('mitum'); 
 
-const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3~stellar-priv-v0.0.1"; // sender's private key
-const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi~mca-v0.0.1";                      // sender's account address
-const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPC~btc-pub-v0.0.1";                   // public key of the account to newly create
+const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";                      // sender's account address
+const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu";                   // public key of the account to newly create
 
 const key = generator.formatKey(targetPub, 100);
 const keys = generator.createKeys([key], 100);
@@ -255,18 +273,18 @@ createAccounts.dict();
   _hint: 'mitum-currency-create-accounts-operation-v0.0.1',
   fact: {
     _hint: 'mitum-currency-create-accounts-operation-fact-v0.0.1',
-    hash: '59w8hZXcQNqKh7m39S3d4iUiZo7yr8FLscjMqehQ3mFU',
-    token: 'MjAyMS0xMS0xNlQwMTozNDo0NC45NDRa',
-    sender: '6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi~mca-v0.0.1',
+    hash: 'Bfo2ZfxWysPAY7ZAJL3cJkhNiwnmo6guZMTJWJYTxvA9',
+    token: 'MjAyMS0xMi0wOVQwODozODozNy4zNTZa',
+    sender: 'CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca',
     items: [ [Object] ]
   },
-  hash: 'CSwqVuQr7H11mfnaY3WwEkkhKafVhdLmt7FAoeYqDGfz',
+  hash: 'G5Gb4GFKQZ7Nb6wf19EFHCo9BDn1eRW9BkwNP82x1Aiy',
   fact_signs: [
     {
       _hint: 'base-fact-sign-v0.0.1',
-      signer: 'GCSFDZ63ZGFWHN3M4XNAZKPLKWEEW32BMTM3KSVK4IFY7JCUVNF6GPNH~stellar-pub-v0.0.1',
-      signature: '2y8Rei2t7Tw4Kh2RV88dA9mCfizNH2ogLsfGAvTFLKARVso1UXARtyDjuDi6tBWSvcP2wCiTQU7ZL1ffEdX7a4kN',
-      signed_at: '2021-11-16T01:34:44.969Z'
+      signer: '28YvsS7h5CwBaX7rN6DbHoh2rtsH1q3Svw5xK3UbLH3a6mpu',
+      signature: '381yXZJ7MMvKqxNR1fr2kxLdvp5qfPP1oSYFts9qh554eup795tAZ9haTpHaAh2aHcAw4hmE62Y2fLzLpJDD4wHey1u75Kye',
+      signed_at: '2021-12-09T08:38:37.387Z'
     }
   ]
 }
@@ -283,9 +301,9 @@ import mitumc from 'mitumc';
 
 const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
-const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3~stellar-priv-v0.0.1";
-const toPub = "0422a860ed96a917c41d95b50d61e0d34fb0f7aa1f0b47dca5dc2ad9b7514497aa94ad8e62f3b1a9e877fee95075b7003f8c432b37eb90f2f01ed1cee4f31879ae~ether-pub-v0.0.1";
-const fromAddr = "G6mRkczkChCfGEV9qT8h9V3TeUdagxSpbN4KMuC2LtoV~mca-v0.0.1";
+const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const toPub = "fNRMg9HNguo1zDtA9E526BGD1yxnBn8zmFE2WXJXqtn9mpu";
+const fromAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
 const key = generator.formatKey(toPub, 100);
 const keys = generator.createKeys([key], 100);
@@ -293,7 +311,7 @@ const keys = generator.createKeys([key], 100);
 const keyUpdaterFact = generator.createKeyUpdaterFact(fromAddr, "MCC", keys);
 const keyUpdater = generator.createOperation(keyUpdaterFact, "");
 
-keyUpdater.addSign(source_priv);
+keyUpdater.addSign(sourcePriv);
 ```
 
 ### Generate Transfers
@@ -307,8 +325,8 @@ import mitumc from 'mitumc';
 
 const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
-const sourcePriv = "L4qMcVKwQkqrnPPtEhj8idCQyvCN2zyG374i5oftGQfraJEP8iek~btc-priv-v0.0.1";
-const targetAddr = "GYJMxzXsgUbhayJvG34HAVT6288EYEkUxdyghDhjibtv~mca-v0.0.1";
+const sourcePriv = "KzdeJMr8e2fbquuZwr9SEd9e1ZWGmZEj96NuAwHnz7jnfJ7FqHQBmpr";
+const targetAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
 const amount = generator.formatAmount("100", "MCC");
 const amounts = generator.createAmounts([amount]);
@@ -331,9 +349,9 @@ import mitumc from 'mitumc';
 
 const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
-const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3~stellar-priv-v0.0.1";
-const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi~mca-v0.0.1";
-const signer = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ~mca-v0.0.1";
+const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr";
+const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
+const signer = "D5VZn3emFTmd1dyVNGEEHoYXtSPxD9d9psy881jpwGbemca";
 
 const createDocumentsItem = generator.createCreateDocumentsItem("abcdabc~mbfh-v0.0.1", 150, "user01", "title150", 1234, "MCC", [signer], ["user02"]);
 
@@ -355,10 +373,10 @@ import mitumc from 'mitumc';
 
 const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
-const owner = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi~mca-v0.0.1";
+const owner = "D5VZn3emFTmd1dyVNGEEHoYXtSPxD9d9psy881jpwGbemca";
 
-const senderPriv = "SDASY3GHXQUUJGPVMGB6PVPJYQZA5VGNY7PKG3O3OIVJ5AOTGR7CDWCS~stellar-priv-v0.0.1";
-const senderAddr = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ~mca-v0.0.1";
+const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr";
+const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
 const signDocumentsItem = generator.createSignDocumentsItem(owner, 1, "MCC");
 
@@ -382,9 +400,9 @@ import mitumc from 'mitumc';
 
 const generator = new mitumc.Generator('mitum'); // new mitumc.Generator({networkId})
 
-const sourcePriv = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3~stellar-priv-v0.0.1";
-const sourceAddr = "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi~mca-v0.0.1";
-const targetAddr = "3GFpucWfTjHFaseG4X6X83qEugtci7bzyxcE1xgRUqpQ~mca-v0.0.1";
+const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr";
+const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
+const targetAddr = "D5VZn3emFTmd1dyVNGEEHoYXtSPxD9d9psy881jpwGbemca";
 
 const transferDocumentsItem = generator.createTransferDocumentsItem(sourceAddr, targetAddr, 1, "MCC");
 
@@ -438,7 +456,7 @@ const parser = mitumc.JSONParser;
 // See above sections.
 // ...
 
-const signer = "SAZ4AMZV62FTWULIYLAH2PLR6LY7JVWAI4SOIFRHQLMNQ2W4NKMWDPL3~stellar-priv-v0.0.1";
+const signer = "KyK7aMWCbMtCJcneyBZXGG6Dpy2jLRYfx3qp7kxXJjLFnppRYt7wmpr";
 
 const operations = [createAccounts];
 const seal = generator.createSeal(signer, operations);
@@ -485,10 +503,10 @@ import bs58 from 'bs58';
 
 const msg = Buffer.from('mitum');
 
-const btckp = mitumc.getKeypair('btc');
-const sign = btckp.sign(msg) // <Buffer 30 45 02 21 00 9f 21 a9 5d 98 12 60 20 46 0d 0f 2f 48 ab 88 02 21 21 40 6c f2 24 01 32 87 24 3c 06 a2 a2 da 33 02 20 3b a1 43 c0 a0 c1 6b bf 02 c5 95 ... >
+const kp = mitumc.getNewKeypair();
+const sign = kp.sign(msg); // <Buffer 30 44 02 20 10 59 3d a8 e5 52 5b 46 1e da 16 a2 2b d7 55 77 6a 69 b7 44 12 9d a7 8a 49 45 4d 6a 2f f8 97 aa 02 20 01 10 50 7f 14 a8 9d 28 fd bd 5a 28 ... 20 more bytes>
 
-bs58.encode(sign); // 'AN1rKvtAFuz64U5jEK6FRpxoiLCiGWAjoX3R6NYPQE3WJfpTj9ye9vAyAV3yaGSeangJE1GK8U2eNLSFo2siKq2Zc2CXXUiVE'
+bs58.encode(sign); // '381yXYmfPnG4vefuMCQNhZzQzBbscttUvhuxUr4y62EvWCWUwtMXoUgVZGysA2jSEtPKBJevtD4nrsePdiQKdGjwrzqgJSev'
 ```
 
 Omit ether/stellar keypair sign. (bcz same...)
@@ -507,33 +525,44 @@ operation.json
 ```json
 {
     "memo": "",
-    "_hint": "mitum-currency-transfers-operation-v0.0.1",
+    "_hint": "mitum-currency-create-accounts-operation-v0.0.1",
     "fact": {
-        "_hint": "mitum-currency-transfers-operation-fact-v0.0.1",
-        "hash": "6m475UjwWN1Qdu5K6Kw5xgRb8MBBVoEx91jusEXbuZUc",
-        "token": "MjAyMS0xMS0xNlQwMTo0Njo0Mi4zODla",
-        "sender": "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi~mca-v0.0.1",
+        "_hint": "mitum-currency-create-accounts-operation-fact-v0.0.1",
+        "hash": "Bstm7B9pEoygjyMoLmxXTnu5d4TBzpcXaoAvx5m1dZis",
+        "token": "MjAyMS0xMi0wOVQwOToxMjo1Ni4xMzha",
+        "sender": "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca",
         "items": [
             {
-                "_hint": "mitum-currency-transfers-item-single-amount-v0.0.1",
-                "receiver": "GYJMxzXsgUbhayJvG34HAVT6288EYEkUxdyghDhjibtv~mca-v0.0.1",
+                "_hint": "mitum-currency-create-accounts-single-amount-v0.0.1",
+                "keys": {
+                    "_hint": "mitum-currency-keys-v0.0.1",
+                    "hash": "HVoJASiqZYuqVQnAnW9mRWqeoXfo7dSbAu55orBYqXms",
+                    "keys": [
+                        {
+                            "_hint": "mitum-currency-key-v0.0.1",
+                            "weight": 100,
+                            "key": "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu"
+                        }
+                    ],
+                    "threshold": 100
+                },
                 "amounts": [
                     {
                         "_hint": "mitum-currency-amount-v0.0.1",
-                        "amount": "100",
-                        "currency": "MCC"
+                        "amount": "1000",
+                        "currency": "CWC"
                     }
                 ]
             }
         ]
     },
-    "hash": "G8XQ9mJxt12G1Mk9bQ7gn7y4pD8QATvNdTbq3fT4W96U",
+    "hash": "9jGDguaPeH8EtPm9X6tBs5QPLCb5mzpH8J51kyUNoRYL",
     "fact_signs": [
         {
             "_hint": "base-fact-sign-v0.0.1",
-            "signer": "GCSFDZ63ZGFWHN3M4XNAZKPLKWEEW32BMTM3KSVK4IFY7JCUVNF6GPNH~stellar-pub-v0.0.1",
-            "signature": "4uqaEzbptXjAFR18itC37C9HzRW6jp1eVHmjQecGw1V8Jpi9Lsy2F9rcP8dBGXQ7rAVmEBN624coU232LHSVg8A4",
-            "signed_at": "2021-11-16T01:46:42.416Z"
+            "signer": "28YvsS7h5CwBaX7rN6DbHoh2rtsH1q3Svw5xK3UbLH3a6mpu",
+            "signature": "381yXZT85ERKm4RsriM6zzNwsgtsj9qD1cUkpygNVGpfSKyY8ZtQkEX634a617VxQwUqFskERPWA93DZwpASqvcSdJUoKB7K",
+            "signed_at": "2021-12-09T09:12:56.168Z"
         }
     ]
 }
@@ -548,11 +577,14 @@ After adding a fact signature, operation hash is always changed.
 ```js
 import mitumc from 'mitumc';
 
-const signer = new Signer('mitum', "KwuAMGjAcBBDXvtfBwi4CDZPGhCwpxCGMxL6rac667FRyV2i1gFu~btc-priv-v0.0.1");
+const signer = new Signer('mitum', "L3CQHoKPJnK61LZhvvvfRouvAjVVabx2RQXHHhPHbBssgcewjgNimpr");
 
 /* Signer.signOperation(#target) */
 /* #target must be a dictionary style object or the path of opertaion json file */
 const newOperation = signer.signOperation('operation.json'); // or an object itself instead of the path 'operation.json'
+
+const parser = mitumc.JSONParser;
+parser.generateFile(newOperation, 'signed.json');
 ```
 
 After signing, above operation must be like below.(Each value is up to input arguments and time)
@@ -560,21 +592,32 @@ After signing, above operation must be like below.(Each value is up to input arg
 ```json
 {
     "memo": "",
-    "_hint": "mitum-currency-transfers-operation-v0.0.1",
+    "_hint": "mitum-currency-create-accounts-operation-v0.0.1",
     "fact": {
-        "_hint": "mitum-currency-transfers-operation-fact-v0.0.1",
-        "hash": "6m475UjwWN1Qdu5K6Kw5xgRb8MBBVoEx91jusEXbuZUc",
-        "token": "MjAyMS0xMS0xNlQwMTo0Njo0Mi4zODla",
-        "sender": "6d1pvkKLurRPovsKuQ6X75r7gX5GYHzrWpzpgyyYe6xi~mca-v0.0.1",
+        "_hint": "mitum-currency-create-accounts-operation-fact-v0.0.1",
+        "hash": "Bstm7B9pEoygjyMoLmxXTnu5d4TBzpcXaoAvx5m1dZis",
+        "token": "MjAyMS0xMi0wOVQwOToxMjo1Ni4xMzha",
+        "sender": "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca",
         "items": [
             {
-                "_hint": "mitum-currency-transfers-item-single-amount-v0.0.1",
-                "receiver": "GYJMxzXsgUbhayJvG34HAVT6288EYEkUxdyghDhjibtv~mca-v0.0.1",
+                "_hint": "mitum-currency-create-accounts-single-amount-v0.0.1",
+                "keys": {
+                    "_hint": "mitum-currency-keys-v0.0.1",
+                    "hash": "HVoJASiqZYuqVQnAnW9mRWqeoXfo7dSbAu55orBYqXms",
+                    "keys": [
+                        {
+                            "_hint": "mitum-currency-key-v0.0.1",
+                            "weight": 100,
+                            "key": "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu"
+                        }
+                    ],
+                    "threshold": 100
+                },
                 "amounts": [
                     {
                         "_hint": "mitum-currency-amount-v0.0.1",
-                        "amount": "100",
-                        "currency": "MCC"
+                        "amount": "1000",
+                        "currency": "CWC"
                     }
                 ]
             }
@@ -583,18 +626,18 @@ After signing, above operation must be like below.(Each value is up to input arg
     "fact_signs": [
         {
             "_hint": "base-fact-sign-v0.0.1",
-            "signer": "GCSFDZ63ZGFWHN3M4XNAZKPLKWEEW32BMTM3KSVK4IFY7JCUVNF6GPNH~stellar-pub-v0.0.1",
-            "signature": "4uqaEzbptXjAFR18itC37C9HzRW6jp1eVHmjQecGw1V8Jpi9Lsy2F9rcP8dBGXQ7rAVmEBN624coU232LHSVg8A4",
-            "signed_at": "2021-11-16T01:46:42.416Z"
+            "signer": "28YvsS7h5CwBaX7rN6DbHoh2rtsH1q3Svw5xK3UbLH3a6mpu",
+            "signature": "381yXZT85ERKm4RsriM6zzNwsgtsj9qD1cUkpygNVGpfSKyY8ZtQkEX634a617VxQwUqFskERPWA93DZwpASqvcSdJUoKB7K",
+            "signed_at": "2021-12-09T09:12:56.168Z"
         },
         {
             "_hint": "base-fact-sign-v0.0.1",
-            "signer": "boBer7VNfgW9ZHDAb5wjS5dQ8k9m3zk9qAvvrJiKaiwd~btc-pub-v0.0.1",
-            "signature": "381yXYrZgaeKnRW8AEkg1J76WvidStjYMDgPDPHVgseBdx7rZnUk65mK9u89qqmJUBMFAC6oDy6z5x6k84wV2wanoNdxdDdJ",
-            "signed_at": "2021-11-16T01:53:30.518Z"
+            "signer": "nCmzut2QSi3WethMjJBW91xaRn7pPrcq2CTDNb6wLL1rmpu",
+            "signature": "381yXZ4uxpwfF9PSQskYXsDwrJqZRsowsnktRQas8WoWf2EZMK6ZPh9ZjCcMLxQSruJ8Gsrvxbtvhud5cZtqyiPmA1LVAXxa",
+            "signed_at": "2021-12-09T09:13:19.920Z"
         }
     ],
-    "hash": "BGBJof9vBUXhRAoicPWRBBYhWdMCaGWV6brTujzCt8yX"
+    "hash": "7gVEAhs9vwb6YKFANGcTo5SJGRHDthLvU81UfS7W7ZPG"
 }
 ```
 
