@@ -1,8 +1,7 @@
 module.exports = {
+    Keypair: require('./lib/key').Keypair,
+    getNewKeypair: require('./lib/key').getNewKeypair,
     Generator: require('./lib/seal').Generator,
     JSONParser: require('./lib/seal').JSONParser,
-    getKeypair: require('./lib/key').getKeypair,
-    toKeypair: require('./lib/key').toKeypair,
     Signer: require('./lib/seal').Signer,
-    BigInteger: require('./lib/util').BigInteger,
 };
