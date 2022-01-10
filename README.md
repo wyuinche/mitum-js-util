@@ -402,7 +402,7 @@ const signDocumentsItem = gn.createSignDocumentsItem(owner, 1, "MCC");
 
 const signDocumentsFact = gn.createBlockSignFact(BlockSignType.BLOCKSIGN_SIGN_DOCUMENTS, sourceAddr, [signDocumentsItem]);
 
-const SignDocuments = generator.createOperation(signDocumentsFact, "");
+const signDocuments = generator.createOperation(signDocumentsFact, "");
 
 SignDocuments.addSign(sourcePriv);
 ```
@@ -427,7 +427,7 @@ const targetAddr = "D5VZn3emFTmd1dyVNGEEHoYXtSPxD9d9psy881jpwGbemca";
 
 const transferDocumentsItem = gn.createTransferDocumentsItem(sourceAddr, targetAddr, 1, "MCC");
 
-const transferDocumentsFact = gn.createBlockSignFact(blockSignType.BLOCKSIGN_TRANSFER_DOCUMENTS, sourceAddr, [transferDocumentsItem]);
+const transferDocumentsFact = gn.createBlockSignFact(BlockSignType.BLOCKSIGN_TRANSFER_DOCUMENTS, sourceAddr, [transferDocumentsItem]);
 
 const transferDocuments = generator.createOperation(transferDocumentsFact, "");
 
