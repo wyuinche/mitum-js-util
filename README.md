@@ -416,7 +416,7 @@ SignDocuments.addSign(sourcePriv);
 #### Usage
 
 ```js
-import { Generator, blockSignType } from 'mitumc';
+import { Generator, BlockSignType } from 'mitumc';
 
 const generator = new Generator('mitum'); // new mitumc.Generator({networkId})
 const gn = blockSign.blockSign;
