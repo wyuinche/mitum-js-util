@@ -207,8 +207,8 @@ Generator.blockCity.info(docType, documentId)
 Generator.blockCity.userStatistics(hp, strength, agility, dexterity, charisma intelligence, vital)
 
 Generator.blockCity.userDocument(info, owner, gold, bankGold, userStatistics)
-Generator.blockCity.landDocument(info, owner, lender, startTime, period)
-Generator.blockCity.voteDocument(info, owner, round, candidate)
+Generator.blockCity.landDocument(info, owner, address, area, renter, account, rentDate, period)
+Generator.blockCity.voteDocument(info, owner, round, endTime, candidates, bossName, account, office)
 
 Generator.blockCity.getCreateDocumentsItem(document, currencyId)
 Generator.blockCity.getUpdateDocumentsItem(document, currencyId)
@@ -477,15 +477,18 @@ What you must prepare are,
 
 * document id
 * document owner
-* lender
-* start time and period
+* address to rent
+* area to rent
+* renter who rent
+* account who rent
+* rent date and period
 
 #### Usage
 
 ```js
 // Omit steps to generate Generator.. same with user document
 const info = gn.info(BlockCityDocType.DOCTYPE_LAND_DATA, "4cli");
-const landDocument = gn.landDocument(info, "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2021-10-22", 10);
+const landDocument = gn.landDocument(info, "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", "abcd", "city1", "foo", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2021-10-22", 10);
 ```
 
 If you wonder what value needs for each parameter, see [Generator](#generator).
@@ -495,9 +498,11 @@ If you wonder what value needs for each parameter, see [Generator](#generator).
 What you must prepare are,
 
 * voting round
-* candidates and their manifests
-* document id
-* document owner
+* end time of voting
+* candidates - address and manifest
+* boss name
+* account address
+* termofoffice
 
 #### Usage
 
@@ -506,7 +511,7 @@ What you must prepare are,
 const info = gn.info(BlockCityDocType.DOCTYPE_VOTE_DATA, "4cvi");
 const c1 = gn.candidate("8sXvbEaGh1vfpSWSib7qiJQQeqxVJ5YQRPpceaa5rd9Ymca", "");
 const c2 = gn.candidate("Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "");
-const voteDocument = gn.voteDocument(info, "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", 1, [c1, c2]);
+const voteDocument = gn.voteDocument(info, "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", 1, "2022-02-22", [c1, c2], "foo", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2022");
 ```
 
 If you wonder what value needs for each parameter, see [Generator](#generator).
