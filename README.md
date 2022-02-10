@@ -40,8 +40,9 @@ $ npm install mitumc
 |5-1|[Generate User Document](#generate-user-document)|
 |5-2|[Generate Land Document](#generate-land-document)|
 |5-3|[Generate Vote Document](#generate-vote-document)|
-|5-4|[Generate BlockCity Create-Documents](#generate-blockcity-create-documents)|
-|5-5|[Generate BlockCity Update-Documents](#generate-blockcity-update-documents)|
+|5-4|[Generate History Document](#generate-history-document)|
+|5-5|[Generate BlockCity Create-Documents](#generate-blockcity-create-documents)|
+|5-6|[Generate BlockCity Update-Documents](#generate-blockcity-update-documents)|
 |6|[Generate New Seal](#generate-new-seal)|
 |7|[Send Seal to Network](#send-seal-to-network)|
 |8|[Sign Message](#sign-message)|
@@ -209,6 +210,7 @@ Generator.blockCity.userStatistics(hp, strength, agility, dexterity, charisma in
 Generator.blockCity.userDocument(info, owner, gold, bankGold, userStatistics)
 Generator.blockCity.landDocument(info, owner, address, area, renter, account, rentDate, period)
 Generator.blockCity.voteDocument(info, owner, round, endTime, candidates, bossName, account, office)
+Generator.blockCity.historyDocument(info, owner, name, account, date, usage, application)
 
 Generator.blockCity.getCreateDocumentsItem(document, currencyId)
 Generator.blockCity.getUpdateDocumentsItem(document, currencyId)
@@ -440,12 +442,14 @@ Supported document types are
 * User Data
 * Land Data
 * Voting Data
+* History Data
 
 Note a document id for each document type has a unique suffix.
 
 * user data: cui
 * land data: cli
 * vote data: cvi
+* history data: chi
 
 ### Generate User Document
 
@@ -459,7 +463,7 @@ What you must prepare before generate a user document are,
 #### Usage
 
 ```js
-import { Generator } from 'mitumc';
+import { Generator, BlockCityDocType } from 'mitumc';
 
 const generator = new Generator('mitum'); 
 const gn = generator.blockCity;
@@ -516,6 +520,28 @@ const voteDocument = gn.voteDocument(info, "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7
 
 If you wonder what value needs for each parameter, see [Generator](#generator).
 
+### Generate History Document
+
+What you must prepare are,
+
+* document id
+* document owner
+* name
+* account
+* date
+* usage
+* application
+
+#### Usage
+
+```js
+// Omit steps to generate Generator.. same with user document
+const info = gn.info(BlockCityDocType.DOCTYPE_HISTORY_DATA, "1000chi");
+const historyDocument = gn.historyDocument(info, "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca", "abcd", "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca", "2022-02-01T00:00:00.000+09:00", "bob", "foo");
+```
+
+If you wonder what value needs for each parameter, see [Generator](#generator).
+
 ### Generate BlockCity Create-Documents
 
 To generate create-documents operation, you have to prepare,
@@ -563,8 +589,9 @@ const gn = generator.blockCity;
 
 // .. generate document
 
-const item = bcg.getUpdateDocumentsItem(document, "PEN");
-const fact = bcg.getUpdateDocumentsFact("5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", [item]);
+const item = gn.getUpdateDocumentsItem(document, "PEN");
+const fact = gn.getUpdateDocumentsFact("5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", [item]);
+
 const oper = generator.getOperation(fact, "");
 oper.addSign("Kz5gif6kskQA8HD6GeEjPse1LuqF8d3WFEauTSAuCwD1h94vboyAmpr");
 ```

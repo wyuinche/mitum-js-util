@@ -9,11 +9,12 @@ const BlockSignType = {
     BLOCKSIGN_SIGN_DOCUMENTS,
 };
 
-const { DOCTYPE_USER_DATA, DOCTYPE_LAND_DATA, DOCTYPE_VOTE_DATA } = require('./lib/operation/blockcity');
+const { DOCTYPE_USER_DATA, DOCTYPE_LAND_DATA, DOCTYPE_VOTE_DATA, DOCTYPE_HISTORY_DATA } = require('./lib/operation/blockcity');
 const BlockCityDocType = {
     DOCTYPE_USER_DATA,
     DOCTYPE_LAND_DATA,
-    DOCTYPE_VOTE_DATA
+    DOCTYPE_VOTE_DATA,
+    DOCTYPE_HISTORY_DATA,
 };
 
 module.exports = {
