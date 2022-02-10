@@ -1,6 +1,6 @@
 # mitum-js-util
 
-'mitum-js-util' will introduce the usage of [mitum-currency](https://github.com/ProtoconNet/mitum-currency) and [mitum-data-blocksign](https://github.com/ProtoconNet/mitum-data-blocksign) for Javascript.
+'mitum-js-util' will introduce the usage of [mitum-currency](https://github.com/ProtoconNet/mitum-currency), [mitum-data-blocksign](https://github.com/ProtoconNet/mitum-data-blocksign) and [mitum-blockcity](https://github.com/ProtoconNet/mitum-blockcity) for Javascript.
 
 ## Installation
 
@@ -16,11 +16,10 @@ v16.10.0
 $ npm --version
 7.24.0
 ```
-Notice: the package name of 'mitum-js-util' is 'mitumc'.
+Note the package name of 'mitum-js-util' is 'mitumc'.
 
 ```sh
 $ npm install mitumc
-added 74 packages, and audited 75 packages in 23s
 ```
 
 ## Index
@@ -28,18 +27,26 @@ added 74 packages, and audited 75 packages in 23s
 ||Title|
 |---|---|
 |1|[Generate New Keypairs](#generate-new-keypairs)|
-|2|[Generate New Operation](#generate-new-operation)|
+|2|[How to Use Generator](#how-to-use-generator)|
 |2-1|[Get Address of New Account](#get-address-of-new-account)|
-|2-2|[Generate Create-Accounts](#generate-create-accounts)|
-|2-3|[Generate Key-Updater](#generate-key-updater)|
-|2-4|[Generate Transfers](#generate-transfers)|
-|2-5|[Generate Create-Documents](#generate-create-documents)|
-|2-6|[Generate Sign-Documents](#generate-sign-documents)|
-|2-7|[Generate Transfer-Documents](#generate-transfer-documents)|
-|3|[Generate New Seal](#generate-new-seal)|
-|4|[Send Seal to Network](#send-seal-to-network)|
-|5|[Sign Message](#sign-message)|
-|6|[Add Fact Signature to Operation](#add-fact-signature-to-operation)|
+|3|[Generate Currency Operation](#generate-currency-operation)|
+|3-1|[Generate Create-Accounts](#generate-create-accounts)|
+|3-2|[Generate Key-Updater](#generate-key-updater)|
+|3-3|[Generate Transfers](#generate-transfers)|
+|4|[Generate BlockSign Operation](#generate-blocksign-operation)|
+|4-1|[Generate BlockSign Create-Documents](#generate-blocksign-create-documents)|
+|4-2|[Generate BlockSign Sign-Documents](#generate-blocksign-sign-documents)|
+|5|[Generate BlockCity Operation](#generate-blockcity-operation)|
+|5-1|[Generate User Document](#generate-user-document)|
+|5-2|[Generate Land Document](#generate-land-document)|
+|5-3|[Generate Vote Document](#generate-vote-document)|
+|5-4|[Generate History Document](#generate-history-document)|
+|5-5|[Generate BlockCity Create-Documents](#generate-blockcity-create-documents)|
+|5-6|[Generate BlockCity Update-Documents](#generate-blockcity-update-documents)|
+|6|[Generate New Seal](#generate-new-seal)|
+|7|[Send Seal to Network](#send-seal-to-network)|
+|8|[Sign Message](#sign-message)|
+|9|[Add Fact Signature to Operation](#add-fact-signature-to-operation)|
 
 <br />
 
@@ -57,7 +64,7 @@ added 74 packages, and audited 75 packages in 23s
 
 ## Generate New Keypairs
 
-`mitumc` supports to generate keypairs for mitum-currency.
+`mitumc` supports to generate keypairs for mitum.
 
 Note that there are respective type suffix to each private key, public key, and mitum-currency address.
 
@@ -130,9 +137,11 @@ kp.getRawPrivateKey(); // Kz5b6UMxnRvgL91UvNMuRoTfUEAUw7htW2z4kV2PEZUCVPFmdbXi
 kp.getRawPublicKey(); //239uA6z7MxkZfwp5zYKZ6eBbRWk38AvxeyzfHGQM8o2H8
 ```
 
-## Generate New Operation
+## How to Use Generator
 
-### Operations
+This sections will introduce how to use `Generator` and what to prepare to use it. 
+
+### Support Operations
 
 'mitum-js-util' provides three operations of 'mitum-currency',
 
@@ -146,25 +155,11 @@ In addition, 'mitum-js-util' provides three operations of 'mitum-data-blocksign'
 
 * `Create-Documents` creates an document with filehash.
 * `Sign-Documents` signs the document.
-* `Transfer-Documents` transfers documents from the account to another account.
 
-### Prerequisite
+And it supports two operations of 'mitum-blockcity'.
 
-Before generating new operation, you should check below,
-
-* `private key` of source account to generate signatures (a.k.a signing key)
-* `public address` of source account
-* `public key` of target account
-* `network id`
-
-Additionally, you should check below for 'mitum-data-blocksign',
-
-* `filehash` for Create-Documents
-* `owner` and `documentid` for Sign-Documents and Transfer-Documents
-
-Notice that the package name of 'mitum-js-util' is `mitumc` for js codes.
-
-* Every key, address, and keypair must be that of mitum-currency.
+* `Create-Documents` creates an document with document id.
+* `Update-Documents` update the content of the document.
 
 ### Generator
 
@@ -187,36 +182,54 @@ mitum
 ```js
 Generator.currency.key(key, weight) // 1 <= $weight <= 100
 Generator.currency.amount(big, cid) // typeof $big === "string" 
-Generator.currency.createKeys(keys, threshold) // 1 <= $threshold <= 100
-Generator.currency.createAmounts(amounts) 
-Generator.currency.createCreateAccountsItem(keys_o, amounts)
-Generator.currency.createTransfersItem(receiver, amounts)
-Generator.currency.createCreateAccountsFact(sender, items)
-Generator.currency.createKeyUpdaterFact(target, cid, keys_o)
-Generator.currency.createTransfersFact(sender, items)
+Generator.currency.keys(keys, threshold) // 1 <= $threshold <= 100
+Generator.currency.amounts(amounts) 
+Generator.currency.getCreateAccountsItem(keys_o, amounts)
+Generator.currency.getTransfersItem(receiver, amounts)
+Generator.currency.getCreateAccountsFact(sender, items)
+Generator.currency.getKeyUpdaterFact(target, cid, keys_o)
+Generator.currency.getTransfersFact(sender, items)
 ```
 
 2. For `mitum-data-blocksign`, use `Generator.blockSign`.
 
 ```js
-Generator.blockSign.createCreateDocumentsItem(fileHash, did, signcode, title, size, cid, signers, signcodes)
-Generator.blockSign.createSignDocumentsItem(owner, did, cid)
-Generator.blockSign.createTransferDocumentsItem(owner, receiver, did, cid)
-Generator.blockSign.createBlockSignFact(factType, sender, items)
+Generator.blockSign.getCreateDocumentsItem(fileHash, did, signcode, title, size, cid, signers, signcodes)
+Generator.blockSign.getSignDocumentsItem(owner, did, cid)
+Generator.blockSign.getTransferDocumentsItem(owner, receiver, did, cid)
+Generator.blockSign.getBlockSignFact(factType, sender, items)
 ```
 
-3. To create operation and seal, use `Generator.createOperation(fact, memo)` and `Generator.createSeal(signKey, operations)`.
+3. For `mitum-blockcity`, use `Generator.blockCity`.
 
 ```js
-Generator.createOperation(fact, memo)
-Generator.createSeal(signKey, operations)
+Generator.blockCity.candidate(address, manifest)
+Generator.blockCity.info(docType, documentId)
+Generator.blockCity.userStatistics(hp, strength, agility, dexterity, charisma intelligence, vital)
+
+Generator.blockCity.userDocument(info, owner, gold, bankGold, userStatistics)
+Generator.blockCity.landDocument(info, owner, address, area, renter, account, rentDate, period)
+Generator.blockCity.voteDocument(info, owner, round, endTime, candidates, bossName, account, office)
+Generator.blockCity.historyDocument(info, owner, name, account, date, usage, application)
+
+Generator.blockCity.getCreateDocumentsItem(document, currencyId)
+Generator.blockCity.getUpdateDocumentsItem(document, currencyId)
+Generator.blockCity.getCreateDocumentsFact(sender, items)
+Generator.blockCity.getUpdateDocumentsFact(sender, items)
+```
+
+4. To create operation and seal, use `Generator.getOperation(fact, memo)` and `Generator.getSeal(signKey, operations)`.
+
+```js
+Generator.getOperation(fact, memo)
+Generator.getSeal(signKey, operations)
 ```
 
 You can check use-cases of `Generator` in the next part.
 
 ### Get Address of New Account
 
-First of all, `Keys` object must be made. Use `key` and `createKeys` of Generator.
+First of all, `Keys` object must be made. Use `key` and `keys` of Generator.
 
 Note that 1 <= `threshold`, `weight` <= 100.
 
@@ -237,12 +250,16 @@ const key1 = gn.key(pub1, 30); // public key in the account & weight
 const key2 = gn.key(pub2, 30);
 const key3 = gn.key(pub3, 40);
 
-const keys = gn.createKeys([key1, key2, key3], 100); // key list & threshold
+const keys = gn.keys([key1, key2, key3], 100); // key list & threshold
 
 const address = keys.address; // address of the account as string
 
 address // 5KYgKnSyGHECJngakyzHDBt58xt1FJJiUUkCXnjcFySpmca
 ```
+
+## Generate Currency Operation
+
+This part shows how to generate operations of currency model. 
 
 ### Generate Create-Accounts 
 
@@ -265,21 +282,21 @@ const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";           
 const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu";                   // public key of the account to newly create
 
 const key = gn.key(targetPub, 100);
-const keys = gn.createKeys([key], 100);
+const keys = gn.keys([key], 100);
 
 const amount = gn.amount("100", "MCC");
-const amounts = gn.createAmounts([amount]);
+const amounts = gn.amounts([amount]);
 
-const createAccountsItem = gn.createCreateAccountsItem(keys, amounts);
-const createAccountsFact = gn.createCreateAccountsFact(sourceAddr, [createAccountsItem]);
-const createAccounts = generator.createOperation(createAccountsFact, "");
+const createAccountsItem = gn.getCreateAccountsItem(keys, amounts);
+const createAccountsFact = gn.getCreateAccountsFact(sourceAddr, [createAccountsItem]);
+const createAccounts = generator.getOperation(createAccountsFact, "");
 
 createAccounts.addSign(sourcePriv);
 ```
 
 You must add new fact signature by addSign before creating seal or json files from an operation.
 
-Then Operation.dict() methods work correctly.
+Then `Operation.dict()` methods work correctly.
 
 ```js
 createAccounts.dict();
@@ -322,10 +339,10 @@ const toPub = "fNRMg9HNguo1zDtA9E526BGD1yxnBn8zmFE2WXJXqtn9mpu";
 const fromAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
 const key = gn.key(toPub, 100);
-const keys = gn.createKeys([key], 100);
+const keys = gn.keys([key], 100);
 
-const keyUpdaterFact = gn.createKeyUpdaterFact(fromAddr, "MCC", keys);
-const keyUpdater = generator.createOperation(keyUpdaterFact, "");
+const keyUpdaterFact = gn.getKeyUpdaterFact(fromAddr, "MCC", keys);
+const keyUpdater = generator.getOperation(keyUpdaterFact, "");
 
 keyUpdater.addSign(sourcePriv);
 ```
@@ -347,16 +364,20 @@ const sourceAddr = "2D5vAb2X3Rs6ZKPjVsK6UHcnGxGfUuXDR1ED1hcvUHqsmca";
 const targetAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
 const amount = gn.amount("100", "MCC");
-const amounts = gn.createAmounts([amount]);
+const amounts = gn.amounts([amount]);
 
-const transfersItem = gn.createTransfersItem(targetAddr, amounts);
-const transfersFact = gn.createTransfersFact(sourceAddr, [transfersItem]);
-const transfers = generator.createOperation(transfersFact, "");
+const transfersItem = gn.getTransfersItem(targetAddr, amounts);
+const transfersFact = gn.getTransfersFact(sourceAddr, [transfersItem]);
+const transfers = generator.getOperation(transfersFact, "");
 
 transfers.addSign(sourcePriv);
 ```
 
-### Generate Create-Documents
+## Generate BlockSign Operation
+
+This part shows how to generate operations of blocksign model.
+
+### Generate BlockSign Create-Documents
 
 To generate an operation, you must prepare `file-hash`. `Create-Document` supports to create documents with setting `signers` who must sign them.
 
@@ -372,16 +393,16 @@ const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr";
 const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 const signer = "D5VZn3emFTmd1dyVNGEEHoYXtSPxD9d9psy881jpwGbemca";
 
-const createDocumentsItem = gn.createCreateDocumentsItem("abcdabc~mbfh-v0.0.1", 150, "user01", "title150", 1234, "MCC", [signer], ["user02"]);
+const createDocumentsItem = gn.getCreateDocumentsItem("abcdabc~mbfh-v0.0.1", 150, "user01", "title150", 1234, "MCC", [signer], ["user02"]);
 
-const createDocumentsFact = gn.createBlockSignFact(BlockSignType.BLOCKSIGN_CREATE_DOCUMENTS, sourceAddr, [createDocumentsItem])
+const createDocumentsFact = gn.getBlockSignFact(BlockSignType.BLOCKSIGN_CREATE_DOCUMENTS, sourceAddr, [createDocumentsItem])
 
-const createDocuments = generator.createOperation(createDocumentsFact, "");
+const createDocuments = generator.getOperation(createDocumentsFact, "");
 
 createDocuments.addSign(sourcePriv);
 ```
 
-### Generate Sign-Documents
+### Generate BlockSign Sign-Documents
 
 To generate an operation, you must prepare `owner` and `document id`. `Sign-Document` supports to sign documents registered by 'mitum-data-blocksign'
 
@@ -398,41 +419,186 @@ const owner = "D5VZn3emFTmd1dyVNGEEHoYXtSPxD9d9psy881jpwGbemca";
 const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr";
 const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
-const signDocumentsItem = gn.createSignDocumentsItem(owner, 1, "MCC");
+const signDocumentsItem = gn.getSignDocumentsItem(owner, 1, "MCC");
 
-const signDocumentsFact = gn.createBlockSignFact(BlockSignType.BLOCKSIGN_SIGN_DOCUMENTS, sourceAddr, [signDocumentsItem]);
+const signDocumentsFact = gn.getBlockSignFact(BlockSignType.BLOCKSIGN_SIGN_DOCUMENTS, sourceAddr, [signDocumentsItem]);
 
-const signDocuments = generator.createOperation(signDocumentsFact, "");
+const signDocuments = generator.getOperation(signDocumentsFact, "");
 
 SignDocuments.addSign(sourcePriv);
 ```
 
-### ~~Generate Transfer-Documents~~
+## Generate BlockCity Operation
 
-<u>This operation is not supported anymore.</u>
+This part shows how to generate operations of blockcity model.
 
-~~To generate an operation, you must prepare `owner` and `document id`. `Transfer-Document` supports to transfer documents to other account.~~
+Supported operations are
+
+* Create-Documents
+* Sign-Documents
+
+Supported document types are
+
+* User Data
+* Land Data
+* Voting Data
+* History Data
+
+Note a document id for each document type has a unique suffix.
+
+* user data: cui
+* land data: cli
+* vote data: cvi
+* history data: chi
+
+### Generate User Document
+
+What you must prepare before generate a user document are,
+
+* document id
+* Each value in a user statistics
+* document owner
+* user's gold and bank gold
 
 #### Usage
 
 ```js
-import { Generator, BlockSignType } from 'mitumc';
+import { Generator, BlockCityDocType } from 'mitumc';
 
-const generator = new Generator('mitum'); // new mitumc.Generator({networkId})
-const gn = blockSign.blockSign;
+const generator = new Generator('mitum'); 
+const gn = generator.blockCity;
 
-const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr";
-const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
-const targetAddr = "D5VZn3emFTmd1dyVNGEEHoYXtSPxD9d9psy881jpwGbemca";
-
-const transferDocumentsItem = gn.createTransferDocumentsItem(sourceAddr, targetAddr, 1, "MCC");
-
-const transferDocumentsFact = gn.createBlockSignFact(BlockSignType.BLOCKSIGN_TRANSFER_DOCUMENTS, sourceAddr, [transferDocumentsItem]);
-
-const transferDocuments = generator.createOperation(transferDocumentsFact, "");
-
-transferDocuments.addSign(sourcePriv);
+const info = gn.info(BlockCityDocType.DOCTYPE_USER_DATA, "4cui");
+const statistics = gn.userStatistics(1, 1, 1, 1, 1, 1, 1);
+const userDocument = gn.userDocument(info, "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", "10", "10", statistics);
 ```
+
+If you wonder what value needs for each parameter, see [Generator](#generator).
+
+### Generate Land Document
+
+What you must prepare are,
+
+* document id
+* document owner
+* address to rent
+* area to rent
+* renter who rent
+* account who rent
+* rent date and period
+
+#### Usage
+
+```js
+// Omit steps to generate Generator.. same with user document
+const info = gn.info(BlockCityDocType.DOCTYPE_LAND_DATA, "4cli");
+const landDocument = gn.landDocument(info, "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", "abcd", "city1", "foo", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2021-10-22", 10);
+```
+
+If you wonder what value needs for each parameter, see [Generator](#generator).
+
+### Generate Vote Document
+
+What you must prepare are,
+
+* voting round
+* end time of voting
+* candidates - address and manifest
+* boss name
+* account address
+* termofoffice
+
+#### Usage
+
+```js
+// Omit steps to generate Generator.. same with user document
+const info = gn.info(BlockCityDocType.DOCTYPE_VOTE_DATA, "4cvi");
+const c1 = gn.candidate("8sXvbEaGh1vfpSWSib7qiJQQeqxVJ5YQRPpceaa5rd9Ymca", "");
+const c2 = gn.candidate("Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "");
+const voteDocument = gn.voteDocument(info, "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", 1, "2022-02-22", [c1, c2], "foo", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2022");
+```
+
+If you wonder what value needs for each parameter, see [Generator](#generator).
+
+### Generate History Document
+
+What you must prepare are,
+
+* document id
+* document owner
+* name
+* account
+* date
+* usage
+* application
+
+#### Usage
+
+```js
+// Omit steps to generate Generator.. same with user document
+const info = gn.info(BlockCityDocType.DOCTYPE_HISTORY_DATA, "1000chi");
+const historyDocument = gn.historyDocument(info, "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca", "abcd", "8iRVFAPiHKaeznfN3CmNjtFtjYSPMPKLuL6qkaJz8RLumca", "2022-02-01T00:00:00.000+09:00", "bob", "foo");
+```
+
+If you wonder what value needs for each parameter, see [Generator](#generator).
+
+### Generate BlockCity Create-Documents
+
+To generate create-documents operation, you have to prepare,
+
+* currency id for fees
+* document object generated along the above instructions.
+* sender's address and private key
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const generator = new Generator('mitum');
+const gn = generator.blockCity;
+
+// .. generate document
+
+const item = gn.getCreateDocumentsItem(document, "PEN");
+const fact = gn.getCreateDocumentsFact("5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", [item]);
+
+const oper = generator.getOperation(fact, "");
+oper.addSign("Kz5gif6kskQA8HD6GeEjPse1LuqF8d3WFEauTSAuCwD1h94vboyAmpr");
+```
+
+See the start of [Generate BlockCity Operation](#generate-blockcity-operation) for `Document`.
+
+See [Generator](#generator) for details.
+
+### Generate BlockCity Update-Documents
+
+To generate create-documents operation, you have to prepare,
+
+* currency id for fees
+* document object generated along the above instructions.
+* sender's address and private key
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const generator = new Generator('mitum');
+const gn = generator.blockCity;
+
+// .. generate document
+
+const item = gn.getUpdateDocumentsItem(document, "PEN");
+const fact = gn.getUpdateDocumentsFact("5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", [item]);
+
+const oper = generator.getOperation(fact, "");
+oper.addSign("Kz5gif6kskQA8HD6GeEjPse1LuqF8d3WFEauTSAuCwD1h94vboyAmpr");
+```
+
+See the start of [Generate BlockCity Operation](#generate-blockcity-operation) for `Document`.
+
+See [Generator](#generator) for details.
 
 ## Generate New Seal
 
@@ -445,7 +611,7 @@ To generate a seal, 'mitum-js-util' requires,
 * `signing key`
 * `a list of pre-constructed operations` not empty
 
-Registration of `signing key` as the private key for an account is not neccessary.
+Registration of `signing key` as the private key for an account is not necessary.
 
 ### JSONParser
 
@@ -455,7 +621,7 @@ Modules that `JSONParser` supports are,
 
 ```js
 JSONParser.toJSONString(seal)
-JSONParser.generateFile(seal, fName)
+JSONParser.getFile(seal, fName)
 ```
 
 A use-case of `JSONParser` will be introduced in the next part.
@@ -479,26 +645,24 @@ const generator = new Generator('mitum'); // new mitumc.Generator({networkId})
 const signer = "KyK7aMWCbMtCJcneyBZXGG6Dpy2jLRYfx3qp7kxXJjLFnppRYt7wmpr";
 
 const operations = [createAccounts];
-const seal = generator.createSeal(signer, operations);
+const seal = generator.getSeal(signer, operations);
 
 JSONParser.toJSONString(seal);
-JSONParser.generateFile(seal, 'seal.json');
+JSONParser.getFile(seal, 'seal.json');
 ```
 
 Then the result format of `generateFile()` will be like [this](example/seal.json). (Each value is up to input arguments and time)
 
-If you would like to create json file of an operation(not seal), use `JSONParser.generateFile(Operation.dict(), 'filename.json')`.
+If you would like to create json file of an operation(not seal), use `JSONParser.getFile(Operation.dict(), 'filename.json')`.
 
-Don't use Operation class to generateFile directly. You must transform Operation instance to dictionary variable by `Operation.dict()` before use `generateFile()`.
+Don't use Operation class to generateFile directly. You must transform Operation instance to dictionary variable by `Operation.dict()` before use `getFile()`.
 
 ## Send Seal to Network
 
-Created seal json files will be used to send seals by 'mitum-currency'.
+Use `curl` to broadcast your operations.
 
-Use below command to send them to the target network. (See [mitum-currency](https://github.com/ProtoconNet/mitum-currency) for details)
-
-```sh
-$ ./mc seal send --network-id=$NETWORK_ID $SIGNING_KEY --seal=seal.json
+```shell
+~$ curl -X POST -H "Content-Type: application/json" -d @seal.json https://{mitum network address}/builder/send
 ```
 
 * seal.json is your seal file.
@@ -601,7 +765,7 @@ const signer = new Signer('mitum', "L3CQHoKPJnK61LZhvvvfRouvAjVVabx2RQXHHhPHbBss
 /* #target must be a dictionary style object or the path of opertaion json file */
 const newOperation = signer.signOperation('operation.json'); // or an object itself instead of the path 'operation.json'
 
-JSONParser.generateFile(newOperation, 'signed.json');
+JSONParser.getFile(newOperation, 'signed.json');
 ```
 
 After signing, above operation must be like below.(Each value is up to input arguments and time)
