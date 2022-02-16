@@ -203,7 +203,7 @@ Generator.blockSign.getBlockSignFact(factType, sender, items)
 3. For `mitum-blockcity`, use `Generator.blockCity`.
 
 ```js
-Generator.blockCity.candidate(address, nickname, manifest)
+Generator.blockCity.candidate(address, nickname, manifest, count)
 Generator.blockCity.info(docType, documentId)
 Generator.blockCity.userStatistics(hp, strength, agility, dexterity, charisma intelligence, vital)
 
@@ -503,7 +503,7 @@ What you must prepare are,
 
 * voting round
 * end time of voting
-* candidates - address and manifest
+* candidates - address, manifest, nickname and count
 * boss name
 * account address
 * termofoffice
@@ -513,8 +513,8 @@ What you must prepare are,
 ```js
 // Omit steps to generate Generator.. same with user document
 const info = gn.info(BlockCityDocType.DOCTYPE_VOTE_DATA, "4cvi");
-const c1 = gn.candidate("8sXvbEaGh1vfpSWSib7qiJQQeqxVJ5YQRPpceaa5rd9Ymca", "foo1", "");
-const c2 = gn.candidate("Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "foo2", "");
+const c1 = gn.candidate("8sXvbEaGh1vfpSWSib7qiJQQeqxVJ5YQRPpceaa5rd9Ymca", "foo1", "", 1);
+const c2 = gn.candidate("Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "foo2", "", 2);
 const voteDocument = gn.voteDocument(info, "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", 1, "2022-02-22", [c1, c2], "foo", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2022");
 ```
 
