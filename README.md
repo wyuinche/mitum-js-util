@@ -167,7 +167,7 @@ And now, this sdk supports two models implemented based on 'mitum-document', `mi
 
 'mitum blocksign' provides one more additional operation, `Sign-Documents`.
 
-Available document types for each models are like below.
+Available document types for each model are like below.
 
 * Use only one document type, 'blocksign' document for 'mitum blocksign'.
 * Use four document types, 'user, 'land', 'vote', and 'history' for 'mitum blockcity'.
@@ -440,7 +440,7 @@ const signer2 = "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca";
 const creator = gn.md.bs.user(owner, "signcode00", true)
 const user1 = gn.md.bs.user(signer1, "signcode01", true);
 const user2 = gn.md.bs.user(signer2, "signcode02", false);
-const document = gn.md.bs.document("docid01sdi", owner, "test-hs:01", creator, "test-doc-01", "12345", [signer1, signer2]);
+const document = gn.md.bs.document("docid01sdi", owner, "test-hs:01", creator, "test-doc-01", "12345", [user1, user2]);
 ```
 
 If you wonder what each argument means, go to [generator](#generator).
