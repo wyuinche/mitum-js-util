@@ -1,12 +1,12 @@
 # mitum-js-util
 
-'mitum-js-util' will introduce the usage of [mitum-currency](https://github.com/ProtoconNet/mitum-currency), [mitum-document](https://github.com/ProtoconNet/mitum-document), [mitum-currency-extension](https://github.com/ProtoconNet/mitum-currency-extension), [mitum-feefi](https://github.com/ProtoconNet/mitum-feefi) for Javascript.
+'mitum-js-util' is a javascript tool that allows you to create operations of [mitum-currency](https://github.com/ProtoconNet/mitum-currency), [mitum-document](https://github.com/ProtoconNet/mitum-document), [mitum-currency-extension](https://github.com/ProtoconNet/mitum-currency-extension), and [mitum-feefi](https://github.com/ProtoconNet/mitum-feefi).
 
-Note that every address and key is just an example. Don't care about each value. Sometimes signer or owner can be written in practices.
+All addresses and keys are examples only. Never mind each value in the example.
 
-Use accurate and correct addresses and keys when you use. Do not trust all values in this document.
+Use the exact address and key that you can trust when using it. Do not trust all values in this document example.
 
-__With all practices in this document, we are not responsible for using wrong or invalid values.__
+__With regard to the values given in all examples of this document, we are not responsible for the use of incorrect values.__
 
 ## Installation
 
@@ -44,6 +44,7 @@ All versions before `v1.0.0` are trial.
 |3-2|[Generate Key-Updater](#generate-key-updater)|
 |3-3|[Generate Transfers](#generate-transfers)|
 |3-4|[Generate Create-Contract-Accounts](#generate-create-contract-accounts)|
+|3-5|[Generate Withdraws](#generate-withdraws)|
 |4|[Generate Document Operation](#generate-document-operation)|
 |4-1|[Generate BlockSign Documents](#generate-blocksign-documents)|
 |4-2|[Generate BlockCity Documents](#generate-blockcity-documents)|
@@ -77,9 +78,9 @@ All versions before `v1.0.0` are trial.
 
 ## Generate New Keypairs
 
-`mitumc` supports to generate keypairs for mitum.
+`mitumc` supports keypair generation for mitum.
 
-Note that there are respective type suffix to each private key, public key, and mitum-currency address.
+Each private key, public key, and mitum-currency address has its own suffix.
 
 * private key: mpr
 * public key: mpu
@@ -87,19 +88,17 @@ Note that there are respective type suffix to each private key, public key, and 
 
 ### Methods 
 
-There is a method to generate keypairs without any seed. `getNewKeypair()`.
+There is a way to generate keypairs without a seed. `getNewKeypair()`.
 
-First, it creates a btc private key and use its compressed wif as seed for new Keypair.
+If you have `seed` for a new keypair, use `getKeypairFromSeed(seed)`.
 
-If you have `seed` for new Keypair, use `getKeypairFromSeed(seed)`.
-
-Also you can import your own private key to Keypair by `getKeypairFromPrivateKey(key)`.
+Also, `getKeypairFromPrivateKey(key)` allows you to import your private key into `Keypair`.
 
 ```js
-/* Generate new Keypair without seed */
+/* Generate Keypair without a seed */
 getNewKeypair()
 
-/* Generate new Keypair with seed */
+/* Generate Keypair with your seed */
 getKeypairFromSeed(seed)
 
 /* Generate Keypair from your private key */
@@ -122,7 +121,7 @@ kp.getRawPrivateKey(); // KzF4ia7G8in3hm7TzSr5k7cNtx46BdEFTzVdnh82vAopqxJG8rHo
 kp.getRawPublicKey(); // 25jrVNpKr59bYxrWH8eTkbG1iQ8hjvSFKVpfCcDT8oFf8
 ```
 
-From a seed,
+With your seed,
 
 ```js
 import { getKeypairFromSeed } from 'mitumc';
@@ -136,7 +135,7 @@ kp.getRawPrivateKey(); // KynL1wNZjuXvZDboEugU4sWKZ6ck5GTMqtv6eod8Q7C4NaB4kfZP
 kp.getRawPublicKey(); // fyLbH5cUwNTihaW2YkJkAzeoLvTNTzf98r8dtCkjXbuq
 ```
 
-From your private key,
+With your private key,
 
 ```js
 import { getKeypairFromPrivateKey } from 'mitumc';
@@ -152,48 +151,49 @@ kp.getRawPublicKey(); //239uA6z7MxkZfwp5zYKZ6eBbRWk38AvxeyzfHGQM8o2H8
 
 ## How to Use Generator
 
-This sections will introduce how to use `Generator` and what to prepare to use it. 
+This section describes how to use `Generator`. 
 
 ### Support Operations
 
 'mitum-js-util' provides three operations of 'mitum-currency'.
 
-* `Create-Accounts` creates an account with some public keys by a pre-registered account.
-* `Key-Updater` updates the public key of the account to something else.
-* `Transfers` transfers tokens from the account to another account.
+* `Create-Accounts` uses pre-registered accounts to create accounts from public keys.
+* `Key-Updater` replaces the public key of the account.
+* `Transfers` transfers tokens from one account to another.
 
-'mitum-currency' supports various kinds of operations, but 'mitum-js-util' will provide these frequently used operations.
+There are many different types of operations for 'mitum-currency', but 'mitum-js-util' provides only three of these frequently used operations.
 
-'mitum-js-util' provides one operation of 'mitum-currency-extension'.
+'mitum-js-util' provides two operations of 'mitum-currency-extension'.
 
-* `Create-Contract-Accounts` creates an contract account.
+* `Create-Contract-Accounts` creates a contract account.
+* `Withdraws` withdraws tokens from the contract account.
 
 In addition, 'mitum-js-util' provides two operations of 'mitum-document'.
 
 * `Create-Documents` creates an document.
-* `Update-Documents` update the state of the document.
+* `Update-Documents` updates the state of the document.
 
-And now, this sdk supports two models implemented based on 'mitum-document', `mitum blocksign` and `mitum blockcity`.
+And currently, this sdk supports two models: `blocksign` and `blockcity` implemented based on 'mitum-document'.
 
-'mitum blocksign' provides one more additional operation, `Sign-Documents`.
+'mitum blocksign' provides an additional operation called , `Sign-Documents`.
 
-Available document types for each model are like below.
+The following types of documents are available for each model:
 
-* Use only one document type, 'blocksign' document for 'mitum blocksign'.
-* Use four document types, 'user, 'land', 'vote', and 'history' for 'mitum blockcity'.
+* `blocksign` for 'blocksign'.
+* `user`, `land`, `vote`, and `history` for 'blockcity'.
 
 Finally, 'mitum-js-util' provides four operations of 'mitum-feefi'.
 
-* `Pool-Register` registers a pool to the contract account.
+* `Pool-Register` registers 'pool' in the contract account.
 * `Pool-Policy-Updater` updates 'policy' of the pool in the contract account.
-* `Pool-Deposits` deposits amounts to pool.
-* `Pool-Withdraw` withdraws amounts from pool.
+* `Pool-Deposits` deposits amounts in the pool.
+* `Pool-Withdraw` withdraws amounts from the pool.
 
 ### Generator
 
-`mitumc` package provides `Generator` class to generate operations.
+`mitumc` package provides `Generator` class to help you create operations.
 
-First of all, set network id of Generator.
+First, set `network id` of `Generator`.
 
 ```js
 >>> const { Generator } = require('mitumc');
@@ -219,7 +219,9 @@ Generator.currency.getKeyUpdaterFact(target, currencyId, keys)
 Generator.currency.getTransfersFact(sender, items)
 
 Generator.currency.extension.getCreateContractAccountsItem(keys, amounts)
+Generator.currency.extension.getWithdrawsItem(target, amounts)
 Generator.currency.extension.getCreateContractAccountsFact(sender, items)
+Generator.currency.extension.getWithdrawsFact(sender, items)
 ```
 
 2. For `mitum-document`, use `Generator.document`.
@@ -231,11 +233,11 @@ Generator.document.getCreateDocumentsFact(sender, items)
 Generator.document.getUpdateDocumentsFact(sender, items)
 ```
 
-Note that create-documents and update-documents of `mitum-document` are common operations of `blocksign` and `blockcity`.
+`create-documents` and `update-documents` of 'mitum-document' are common operations of `blocksign` and `blockcity`.
 
-So `document` helps to generate `item` and`fact` of those operations simultaneously.
+Thus, `document` helps to generate both the `item` and `fact` of these operations simultaneously.
 
-3. to generate `blocksign` specific objects, use `Generator.document.blocksign`.
+3. Use `Generator.document.blocksign` to create `blocksign` specific objects.
 
 ```js
 Generator.document.blocksign.user(address, signcode, signed)
@@ -244,13 +246,13 @@ Generator.document.blocksign.getSignDocumentsItem(documentId, owner, currencyId)
 Generator.document.blocksign.getSignDocumentsFact(sender, items)
 ```
 
-Note that `sign-documents` is provided only for `blocksign`.
+`sign-documents` is provided only for `blocksign`.
 
-So what supports sign-documents is `Generator.document.blocksign` rather than `Generator.document`.
+Therefore, it is `Generator.document.blocksign` rather than `Generator.documents` that supports `sign-documents`
 
-The output of `user` is served as 'creator' or 'signer' of `document`. 
+The output object of `user` is served as a `creator` or `signer` of `document`. 
 
-4. To generate `blockcity` specific objects, use `Generator.document.blockcity`.
+4.  Use `Generator.document.blockcity` too create `blockcity` specific objects.
 
 ```js
 Generator.document.blockcity.candidate(address, nickname, manifest, count)
@@ -270,27 +272,27 @@ Generator.feefi.getPoolDepositsFact(sender, pool, poolId, amount)
 Generator.feefi.getPoolWithdrawFact(sender, pool, poolId, amounts)
 ```
 
-6. To create operation and seal, use `Generator.getOperation(fact, memo)` and `Generator.getSeal(signKey, operations)`.
+6. To create operations and seals, use `Generator.getOperation(fact, memo)` and `Generator.getSeal(signKey, operations)`.
 
 ```js
 Generator.getOperation(fact, memo)
 Generator.getSeal(signKey, operations)
 ```
 
-You can check use-cases of `Generator` in the next part.
+Use cases of `Generator` can be found in the next chapter.
 
 ### Get Address of New Account
 
-First of all, `Keys` object must be made. Use `key` and `keys` of Generator.
+First, you have to create `Keys`. Use `key` and `keys` of `Generator`.
 
-Note that 1 <= `threshold`, `weight` <= 100.
+Note that `1 <= threshold, weight <= 100`.
 
 ```js
 import { Generator } from 'mitumc';
 
 /*
-* 'mitum' is network id. Put your own one.
-* You don't have to put right network id if you want just to get address.
+* 'mitum' is network id. Put yours in.
+* You do not need to enter the network ID correctly to obtain the address only.
 */
 const gn = new Generator('mitum');
 
@@ -298,28 +300,26 @@ const pub1 = "21nHZiHxhjwXtXXhPFzMvGyAAdCobmZeCC1bT1yLXAaw2mpu"
 const pub2 = "mZKEkm4BnFq6ynq98q4bCEcE4kZhzLSViPbCx8LDBXk2mpu"
 const pub3 = "dPBms4cH4t8tiH6uNbq37HrEWwgrrEZqHQwSbvqEBJ85mpu"
 
-const key1 = gn.currency.key(pub1, 30); // public key in the account & weight
+const key1 = gn.currency.key(pub1, 30); // public key, weight
 const key2 = gn.currency.key(pub2, 30);
 const key3 = gn.currency.key(pub3, 40);
 
-const keys = gn.currency.keys([key1, key2, key3], 100); // key list & threshold
+const keys = gn.currency.keys([key1, key2, key3], 100); // key list, threshold
 
-const address = keys.address; // address of the account as string
+const address = keys.address; // string address
 
 address // 5KYgKnSyGHECJngakyzHDBt58xt1FJJiUUkCXnjcFySpmca
 ```
 
 ## Generate Currency Operation
 
-This part shows how to generate operations of currency model. 
+This part shows how to create an operation for the currency model.
 
 ### Generate Create-Accounts 
 
-For new account, `currency id` and `initial amount` must be set. With source account, you can create and register new account for target public keys.
+For a new account, you must set `current id` and `initial amount`. You can use pre-registered(source) accounts to create and register new accounts from the target public keys.
 
-Note that source account must be already registered one.
-
-When you use `Generator`, you must set `network id` before you create something.
+When using `Generator`, you must set `network id` before using it.
 
 #### Usage
 
@@ -330,7 +330,7 @@ const gn = new Generator('mitum');
 
 const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
 const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
-const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu"; // public key of the account to newly create
+const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu"; // target public keys
 
 const key = gn.currency.key(targetPub, 100);
 const keys = gn.currency.keys([key], 100);
@@ -344,9 +344,9 @@ const createAccounts = gn.getOperation(createAccountsFact, "");
 createAccounts.addSign(sourcePriv);
 ```
 
-You must add new fact signature by addSign before creating seal or json files from an operation.
+You must add a new fact signature via `Opeation.addSign(priv)` before creating a seal or json file from the operation.
 
-Then `Operation.dict()` methods work correctly.
+Then `Operation.dict()` method works correctly.
 
 ```js
 createAccounts.dict();
@@ -374,7 +374,7 @@ createAccounts.dict();
 
 ### Generate Key-Updater
 
-`Key-Updater` literally supports to update source public key to something else.
+`Key-Updater` literally supports updating public keys to something else.
 
 #### Usage
 
@@ -397,7 +397,7 @@ keyUpdater.addSign(sourcePriv);
 
 ### Generate Transfers
 
-To generate an operation, you must prepare `target address`, not public key. `Transfers` supports to send tokens to another account.
+To generate an operation, you must prepare a `destination(target) address` rather than public keys. Transfers supports sending tokens to other accounts.
 
 #### Usage
 
@@ -421,9 +421,7 @@ transfers.addSign(sourcePriv);
 
 ### Generate Create-Contract-Accounts
 
-For new contract account, `currency id` and `initial amount` must be set. With source account, you can create and register new contract account for target public keys.
-
-Note that source account must be already registered one.
+For a new contract account, you need to set `current id` and `initial amount`. You can use a pre-registered account to create and register new contract accounts from the target public keys.
 
 #### Usage
 
@@ -434,7 +432,7 @@ const gn = new Generator('mitum');
 
 const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
 const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
-const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu"; // public key of the account to newly create
+const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu"; // target public keys
 
 const key = gn.currency.key(targetPub, 100);
 const keys = gn.currency.keys([key], 100);
@@ -448,29 +446,53 @@ const createAccounts = gn.getOperation(createAccountsFact, "");
 createAccounts.addSign(sourcePriv);
 ```
 
+### Generate Withdraws
+
+`Withdraws` is an operation for withdrawing tokens from a contract account.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const targetAddr = "2D5vAb2X3Rs6ZKPjVsK6UHcnGxGfUuXDR1ED1hcvUHqsmca"; // target contract account's address
+
+const amount = gn.currency.amount("MCC", "100");
+const amounts = gn.currency.amounts([amount]);
+
+const item = gn.currency.extension.getWithdrawsItem(targetAddr,  amounts);
+const fact = gn.currency.extension.getWithdrawsFact(senderAddr, [item])
+const operation = gn.getOperation(fact, "")
+operation.addSign(senderPriv)
+```
+
 ## Generate Document Operation
 
-To create or update documents, you must prepare available document object for each operation item.
+To create or update documents, you must prepare available document objects for each type of operation item.
 
-For example, 'blocksign' supports one type of 'document', blocksign document, which hint is `mitum-blocksign-document-data`.
+For example, 'blocksign' supports blocksign document, a type of 'document' with the hint `mitum-blocksign-document-data`.
 
-However, 'blockcity' supports four types of 'document', user/land/vote/history document, with hints different with blocksign.
+However, 'blockcity' supports four types of 'document', including user/land/vote/history documents, and their hints are different from blocksign.
 
-That means you must generate a document corresponding to the document type you want.
+That is, you must create a document that corresponds to the type of document you want.
 
-So first, we will introduce how to generate a document for each type.
+So let's start with how to create documents for each type.
 
 ### Generate BlockSign Documents
 
-As mentioned, blocksign uses only one document type, blocksign document.
+As mentioned earlier, 'blocksign' uses only one document type, blocksign document.
 
-First, you must prepare a creator and signers.
+You must first prepare `creator` and `signer`.
 
-For convenience, call each of them `user`.
+For your convenience, call each `user`.
 
-A `user` can be generated by `Generator.document.blocksign.user(address, signCode, signed)`
+A `user` can be created by `Generator.document.blocksign.user(address, signCode, signed)`
 
-What you have to prepare to generate document are
+To create a document, you need to prepare:
 
 * document id
 * owner
@@ -480,7 +502,7 @@ What you have to prepare to generate document are
 * file size
 * a signer list - signers from `user`
 
-Note that every document ids of blocksign are followed by the type suffix `sdi`.
+All 'blocksign' document IDs are followed by the suffix `sdi`.
 
 #### Usage
 
@@ -500,34 +522,32 @@ const user2 = gn.document.blocksign.user(signer2, "signcode02", false);
 const document = gn.document.blocksign.document("docid01sdi", owner, "test-hs:01", creator, "test-doc-01", "12345", [user1, user2]);
 ```
 
-If you wonder what each argument means, go to [generator](#generator).
+If you want to know the meaning of each argument, go to [generator](#generator).
 
 ### Generate BlockCity Documents
 
-Supported document types of blockcity are
+The following types of blockcity documents are supported:
 
 * User Data
 * Land Data
 * Voting Data
 * History Data
 
-Note a document id for each document type has a unique suffix.
+Document IDs for each document type have their own suffixes.
 
 * user data: cui
 * land data: cli
 * vote data: cvi
 * history data: chi
 
-Those documents are used only by blockcity.
-
-If you wonder what each argument means, see [Generator](#generator).
+The document types above are used only for 'blockcity'.
 
 #### User Document
 
-What you must prepare before generate a user document are,
+Before you create 'user document', you need to prepare the following:
 
 * document id
-* Each value in a user statistics
+* Each value for user statistics
 * document owner
 * user's gold and bank gold
 
@@ -571,7 +591,7 @@ What you must prepare are,
 * termofoffice
 
 ```js
-// same gn and owner with user document
+// same gn and owner as user document
 const c1 = "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca";
 const c2 = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
@@ -593,19 +613,19 @@ What you must prepare are,
 * application
 
 ```js
-// same gn and owner with user document
+// same gn and owner as user document
 const document = gn.document.blockcity.historyDocument("4000chi", owner, "user01", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2022-02-01T03:03:02.333", "usage1", "application1");
 ```
 
 ### Generate Create-Documents
 
-All models based on 'mitum-document' are played with operations, 'create-documents' and 'update-documents'.
+All models based on 'mitum-documents' operate as 'create-documents' and 'update-documents'.
 
-So in this section, we will introduce how to generate create-documents and update-documents operation with documents you prepared.
+Therefore, this section introduces how to create 'create-documents' and 'update-documents' operations with prepared documents.
 
-About generating documents, go to the previous section.
+To prepare a document, go to the previous section.
 
-To generate create-documents operation, you have to prepare,
+To create a 'create-documents' operation, you must prepare the following:
 
 * currency id for fees
 * document
@@ -627,13 +647,13 @@ const operation = gn.getOperation(fact, "");
 operation.addSign("Kz5gif6kskQA8HD6GeEjPse1LuqF8d3WFEauTSAuCwD1h94vboyAmpr");
 ```
 
-See the start of [Generate Document Operation](#generate-document-operation) for `Document`.
+See start of [Generate Document Operation](#generate-document-operation) for `Document`.
 
-See [Generator](#generator) for details.
+See [Generator](#generator) for more information.
 
 ### Generate Update-Documents
 
-To generate create-documents operation, you have to prepare,
+To generate create-documents operations, you have to prepare,
 
 * currency id for fees
 * document
@@ -655,23 +675,23 @@ const operation = gn.getOperation(fact, "");
 operation.addSign("Kz5gif6kskQA8HD6GeEjPse1LuqF8d3WFEauTSAuCwD1h94vboyAmpr");
 ```
 
-See the start of [Generate Document Operation](#generate-document-operation) for `Document`.
+See start of [Generate Document Operation](#generate-document-operation) for `Document`.
 
-See [Generator](#generator) for details.
+See [Generator](#generator) for more information.
 
 ### Generate BlockSign Sign-Documents
 
-As mentioned, `sign-documents` operation is used only for 'blocksign'.
+As mentioned earlier, `sign-documents` operation is used only for 'blocksign'.
 
-So you must use blocksign specific generator, `Generator.document.blocksign` to generate items and facts of sign-documents.
+Therefore, you must use `Generator.document.blocksign`, a specific generator of blocksign, to generate 'sign-documents' fact and item.
 
-To generate a sign-document's item, you must prepare
+To generate an item for sign-document's item,
 
 * document id
 * owner's address
 * currency id for fee
 
-Note that you don't have to prepare document for 'sign-documents'. Only document id is needed.
+You do not need to prepare documents for 'sign-documents'. Only document ID is required.
 
 #### Usage
 
@@ -687,15 +707,15 @@ const operation = gn.getOperation(fact, "");
 operation.addSign("Kz5gif6kskQA8HD6GeEjPse1LuqF8d3WFEauTSAuCwD1h94vboyAmpr");
 ```
 
-See [Generator](#generator) for details.
+See [Generator](#generator) for more information.
 
 ## Generate FeeFi Operation
 
-This part shows how to generate operations of feefi model. 
+This part shows how to generate operations of the fefi model.
 
 ### Generate Pool-Register
 
-`Pool-Register` literally supports to register pool to contract account.
+`Pool-Register` supports the registration of `pool` in the contract account.
 
 #### Usage
 
@@ -717,7 +737,7 @@ operation.addSign(senderPriv);
 
 ### Generate Pool-Policy-Updater
 
-`Pool-Policy-Updater` supports to update registered pool policy.
+`Pool-Policy-Updater` supports to update a registered pool policy.
 
 #### Usage
 
@@ -739,7 +759,7 @@ operation.addSign(senderPriv);
 
 ### Generate Pool-Deposits
 
-`Pool-Deposits` supports to deposit amount to pool.
+`Pool-Deposits` supports depositing amounts into the pool.
 
 #### Usage
 
@@ -761,7 +781,7 @@ operation.addSign(senderPriv);
 
 ### Generate Pool-Withdraw
 
-`Pool-Withdraw` supports to withdraw amounts from pool.
+`Pool-Withdraw` supports withdrawing amounts from the pool.
 
 #### Usage
 
@@ -784,33 +804,33 @@ operation.addSign(senderPriv)
 
 ## Generate New Seal
 
-Supports you to generate a seal json file such that the seal is able to consist of several operations. Those operations can be any type 'mitum-js-util' provides.
+'mitum-js-util' supports you to create a seal consisting of various operations as a json file. All operations that can be created through 'mitum-js-util' are targeted.
 
 ### Prerequisite
 
-To generate a seal, 'mitum-js-util' requires,
+To generate a seal, you need the following:
 
 * `signing key`
-* `a list of pre-constructed operations` not empty
+* `a list of pre-constructed operations`
 
-Registration of `signing key` as the private key for an account is not necessary.
+The `signing key` can be any mitum private key.
 
 ### JSONParser
 
-You can create a json file from generated seal object without `JSONParser` class provided by `mitumc`. However, I recommend to use `JSONParser` for convenience.
+You can create a json file using another module supported by javascript without the `JSONParser` class provided by mitumc. However, for convenience, we recommend using `JSONParser`.
 
-Modules that `JSONParser` supports are,
+`JSONParser` supports the following modules:
 
 ```js
 JSONParser.toJSONString(seal)
 JSONParser.getFile(seal, fName)
 ```
 
-A use-case of `JSONParser` will be introduced in the next part.
+In the next part, we will introduce the use case of `JSONParser`.
 
 #### Usage
 
-First of all, suppose that every operation is that generated by `Generator`. (createAccounts, keyUpdater, Transfers, etc...)
+First, assume that all operations are operations created by `Generator`. (such as create-accounts, key-updater, transfers, etc.)
 
 ```js
 import { Generator, JSONParser } from 'mitumc';
@@ -831,11 +851,11 @@ JSONParser.toJSONString(seal);
 JSONParser.getFile(seal, 'seal.json');
 ```
 
-Then the result format of `generateFile()` will be like [this](example/seal.json). (Each value is up to input arguments and time)
+The result of `generateFile()` is the same as [this](example/seal.json). (Each value depends on input arguments and operation creation time)
 
-If you would like to create json file of an operation(not seal), use `JSONParser.getFile(Operation.dict(), 'filename.json')`.
+Use `JSONParser.getFile(Operation.dict(), 'filename')` to create a json file for an operation (not a seal).
 
-Don't use Operation class to generateFile directly. You must transform Operation instance to dictionary variable by `Operation.dict()` before use `getFile()`.
+Do not use the Operation class immediately as an argument for `getFile()`. Before using `getFile()`, you must convert the Operation instance to a dictionary object using `Operation.dict()`.
 
 ## Send Seal to Network
 
@@ -845,21 +865,21 @@ Use `curl` to broadcast your operations.
 ~$ curl -X POST -H "Content-Type: application/json" -d @seal.json https://{mitum network address}/builder/send
 ```
 
-* seal.json is your seal file.
+* `seal.json` is your seal file.
 
 ## Sign Message
 
-Sign message with Keypair.
+Sign messages with your keypair.
 
-`mitumc` supports 'generate' and 'get' keypairs. You can get signature digest which contains a signature by signing with keypairs.
+`mitumc` supports the generation of new keypairs. Signing with a keypair gives you a signature digest.
 
 ### Usage
 
 #### Sign String/Bytes
 
-Each keypair supports `sign` method that generates Buffer format signature by signing Buffer format message.
+Each `Keypair` supports the `sign` method, which generates a buffer type signature by signing a buffer type message.
 
-If you want to get signature for 'mitum-currency', use `bs58` to encode the signature.
+To obtain a string signature that is compatible with 'mitum', use `bs58` to encode the signature.
 
 ```js
 import { getNewKeypair } from 'mitumc';
@@ -875,13 +895,13 @@ bs58.encode(sign); // '381yXYmfPnG4vefuMCQNhZzQzBbscttUvhuxUr4y62EvWCWUwtMXoUgVZ
 
 ## Add Fact Signature to Operation
 
-With `Signer` object in 'mitum-js-util', you can add new fact signature to operation json.
+You can add a new fact signature to the json operation by using `Signer` in mitum-js-util.
 
-To add signatures, you must prepare `network id` and `signing key`.
+To add a signature, you must prepare `network id` and `signing key`.
 
 ### Usage
 
-For example, suppose that you already have an implemented operation json file like below.
+For example, suppose the following json file has an operation already prepared.
 
 operation.json
 ```json
@@ -932,9 +952,9 @@ operation.json
 
 #### Sign Operation
 
-Use `Signer.signOperation(operation-file-path)` to add new fact signature to "fact_signs" key.
+Use `Signer.signOperation(operation-file-path)` to add a new fact signature to the `fact_signs` key.
 
-After adding a fact signature, operation hash is always changed.
+The `operation hash` always changes after adding a fact signature.
 
 ```js
 import { Signer, JSONParser } from 'mitumc';
@@ -942,13 +962,13 @@ import { Signer, JSONParser } from 'mitumc';
 const signer = new Signer('mitum', "L3CQHoKPJnK61LZhvvvfRouvAjVVabx2RQXHHhPHbBssgcewjgNimpr");
 
 /* Signer.signOperation(#target) */
-/* #target must be a dictionary style object or the path of opertaion json file */
-const newOperation = signer.signOperation('operation.json'); // or an object itself instead of the path 'operation.json'
+/* #target must be either a dictionary style object or a path to the operation json file. */
+const newOperation = signer.signOperation('operation.json');
 
 JSONParser.getFile(newOperation, 'signed.json');
 ```
 
-After signing, above operation must be like below.(Each value is up to input arguments and time)
+After signing, the above operation change as follows. (each value may vary depending on input arguments and operation creation time)
 
 ```json
 {
@@ -1002,7 +1022,7 @@ After signing, above operation must be like below.(Each value is up to input arg
 }
 ```
 
-Signer class doesn't create json file of new operation.
+`Signer` does not create json files for new operations.
 
 Use `JSONParser` if you need.
 
@@ -1012,43 +1032,43 @@ Use `JSONParser` if you need.
 
 #### __Expression of Time Stamp__
 
-For blocks, seals, signatures and etc, mitum uses `yyyy-MM-dd HH:mm:ss.* +0000 UTC` expression and `yyyy-MM-ddTHH:mm:ss.*Z` as standard.
+For blocks, seals, signatures, etc., mitum uses expressions `yyyy-MM-dd HH:mm:ss.* +0000 UTC` and `yyyy-MM-ddTHH:mm:ss.*Z` as the default.
 
-All other timezones are not allowed! You must use only +0000 timezone for mitum.
+All other timezones are not allowed! Only +0000 timezone must be used for mitum.
 
 For example,
 
-1. When converting timestamp to byte format for generating block/seal/fact_sign hash
-    - converting the string `2021-11-16 01:53:30.518 +0000 UTC` to bytes format
+1. When converting timestamps to byte format to generate block/seal/fact_sign hash
+    - convert string `2021-11-16 01:53:30.518 +0000 UTC` to byte format
 
-2. When putting timestamp in block, seal, fact_sign or etc
-    - converting the timestamp to `2021-11-16T01:53:30.518Z` and put it in json
+2. When are placed in block, seal, fact_sign of json files
+    - convert the timestamp to `2021-11-16T01:53:30.518Z` and put it in json
 
-To generate operation hash, mitum concatenates byte arrays of network id, fact hash and byte arrays of fact_signs.
+To generate an operation hash, mitum concatenates byte arrays of network id, fact hash and each byte array of fact_sign.
 
-And to generate the byte array of a fact_sign, mitum concatenates byte arrays of signer, signature digest and signed_at.
+And to generate each byte array of fact_sign, mitum concatenates byte arrays of signer, signature digest and signed_at.
 
-Be careful that the format of `signed_at` when converted to bytes is like `yyyy-MM-dd HH:mm:ss.* +0000 UTC` but it will be expressed as `yyyy-MM-ddTHH:mm:ss.*Z` when putted in json.
+Note that when converted to bytes, the format of `signed_at` is the same as `yyyy-MM-dd HH:mm:ss.* +0000 UTC`, but when put into json, it is displayed as `yyyy-MM-ddTHH:mm:ss.*Z`.
 
 #### __How many decimal places to be expressed?__
 
 There is one more thing to note.
 
-First at all, you don't have to care about decimal points of second(ss.*) in timestamp.
+First, there is no need to pay attention to the decimal places in the 'ss.*' part of the timestamp.
 
-Moreover, you can write timestamp without `.` and any number under `.`.
+Moreover, the timestamp can also be written without `.` or without decimal values below `.`.
 
-However, you should not put any unnecessary zeros(0) in the float expression of second(ss.*) when converting timestamp to bytes format.
+However, when converting timestamps to byte format, you should not add unnecessary zero(0) to floating point representations in seconds(ss.*).
 
 For example,
 
 1. `2021-11-16T01:53:30.518Z` is converted to `2021-11-16 01:53:30.518 +0000 UTC` without any change of the time itself.
 
-2. `2021-11-16T01:53:30.510Z` must be converted to `2021-11-16 01:53:30.51 +0000 UTC` when generating hash.
+2. `2021-11-16T01:53:30.510Z` must be converted to `2021-11-16 01:53:30.51 +0000 UTC` when generating a hash.
 
-3. `2021-11-16T01:53:30.000Z` must be converted to `2021-11-16T01:53:30 +0000 UTC` when generating hash.
+3. `2021-11-16T01:53:30.000Z` must be converted to `2021-11-16T01:53:30 +0000 UTC` when generating a hash.
 
-Any timestamp with some unnecessary zeros putted in json doesn't affect to effectiveness of the block, seal, or operation. Just pay attention when convert the format.
+A timestamp with unnecessary zeros in the json file does not affect the processing of blocks, seals, or operations. Use caution when converting formats.
 
 ### License
 
