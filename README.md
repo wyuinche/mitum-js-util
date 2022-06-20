@@ -1,6 +1,6 @@
 # mitum-js-util
 
-'mitum-js-util' will introduce the usage of [mitum-currency](https://github.com/ProtoconNet/mitum-currency), [mitum-document](https://github.com/ProtoconNet/mitum-document) for Javascript.
+'mitum-js-util' will introduce the usage of [mitum-currency](https://github.com/ProtoconNet/mitum-currency), [mitum-document](https://github.com/ProtoconNet/mitum-document), [mitum-currency-extension](https://github.com/ProtoconNet/mitum-currency-extension), [mitum-feefi](https://github.com/ProtoconNet/mitum-feefi) for Javascript.
 
 Note that every address and key is just an example. Don't care about each value. Sometimes signer or owner can be written in practices.
 
@@ -43,16 +43,22 @@ All versions before `v1.0.0` are trial.
 |3-1|[Generate Create-Accounts](#generate-create-accounts)|
 |3-2|[Generate Key-Updater](#generate-key-updater)|
 |3-3|[Generate Transfers](#generate-transfers)|
+|3-4|[Generate Create-Contract-Accounts](#generate-create-contract-accounts)|
 |4|[Generate Document Operation](#generate-document-operation)|
 |4-1|[Generate BlockSign Documents](#generate-blocksign-documents)|
 |4-2|[Generate BlockCity Documents](#generate-blockcity-documents)|
 |4-3|[Generate Create-Documents](#generate-create-documents)|
 |4-4|[Generate Update-Documents](#generate-update-documents)|
 |4-5|[Generate BlockSign Sign-Documents](#generate-blocksign-sign-documents)|
-|5|[Generate New Seal](#generate-new-seal)|
-|6|[Send Seal to Network](#send-seal-to-network)|
-|7|[Sign Message](#sign-message)|
-|8|[Add Fact Signature to Operation](#add-fact-signature-to-operation)|
+|5|[Generate FeeFi Operation](#generate-feefi-operation)|
+|5-1|[Generate Pool-Register](#generate-pool-register)|
+|5-2|[Generate Pool-Policy-Updater](#generate-pool-policy-updater)|
+|5-3|[Generate Pool-Deposits](#generate-pool-deposits)|
+|5-4|[Generate Pool-Withdraw](#generate-pool-withdraw)|
+|6|[Generate New Seal](#generate-new-seal)|
+|7|[Send Seal to Network](#send-seal-to-network)|
+|8|[Sign Message](#sign-message)|
+|9|[Add Fact Signature to Operation](#add-fact-signature-to-operation)|
 
 <br />
 
@@ -150,13 +156,17 @@ This sections will introduce how to use `Generator` and what to prepare to use i
 
 ### Support Operations
 
-'mitum-js-util' provides three operations of 'mitum-currency',
+'mitum-js-util' provides three operations of 'mitum-currency'.
 
-* `Create-Accounts` creates an account corresponding to any public key with a pre-registered account.
+* `Create-Accounts` creates an account with some public keys by a pre-registered account.
 * `Key-Updater` updates the public key of the account to something else.
 * `Transfers` transfers tokens from the account to another account.
 
 'mitum-currency' supports various kinds of operations, but 'mitum-js-util' will provide these frequently used operations.
+
+'mitum-js-util' provides one operation of 'mitum-currency-extension'.
+
+* `Create-Contract-Accounts` creates an contract account.
 
 In addition, 'mitum-js-util' provides two operations of 'mitum-document'.
 
@@ -171,6 +181,13 @@ Available document types for each model are like below.
 
 * Use only one document type, 'blocksign' document for 'mitum blocksign'.
 * Use four document types, 'user, 'land', 'vote', and 'history' for 'mitum blockcity'.
+
+Finally, 'mitum-js-util' provides four operations of 'mitum-feefi'.
+
+* `Pool-Register` registers a pool to the contract account.
+* `Pool-Policy-Updater` updates 'policy' of the pool in the contract account.
+* `Pool-Deposits` deposits amounts to pool.
+* `Pool-Withdraw` withdraws amounts from pool.
 
 ### Generator
 
@@ -188,61 +205,72 @@ First of all, set network id of Generator.
 mitum
 ```
 
-1. For `mitum-currency`, use `Generator.mc`.
+1. For `mitum-currency`, use `Generator.currency`.
 
 ```js
-Generator.mc.key(key, weight) // 1 <= $weight <= 100
-Generator.mc.amount(currencyId, amount) // typeof $amount === "string" 
-Generator.mc.keys(keys, threshold) // 1 <= $threshold <= 100
-Generator.mc.amounts(amounts) 
-Generator.mc.getCreateAccountsItem(keys, amounts)
-Generator.mc.getTransfersItem(receiver, amounts)
-Generator.mc.getCreateAccountsFact(sender, items)
-Generator.mc.getKeyUpdaterFact(target, currencyId, keys)
-Generator.mc.getTransfersFact(sender, items)
+Generator.currency.key(key, weight) // 1 <= $weight <= 100
+Generator.currency.amount(currencyId, amount) // typeof $amount === "string" 
+Generator.currency.keys(keys, threshold) // 1 <= $threshold <= 100
+Generator.currency.amounts(amounts) 
+Generator.currency.getCreateAccountsItem(keys, amounts)
+Generator.currency.getTransfersItem(receiver, amounts)
+Generator.currency.getCreateAccountsFact(sender, items)
+Generator.currency.getKeyUpdaterFact(target, currencyId, keys)
+Generator.currency.getTransfersFact(sender, items)
+
+Generator.currency.extension.getCreateContractAccountsItem(keys, amounts)
+Generator.currency.extension.getCreateContractAccountsFact(sender, items)
 ```
 
-2. For `mitum-document`, use `Generator.md`.
+2. For `mitum-document`, use `Generator.document`.
 
 ```js
-Generator.md.getCreateDocumentsItem(document, currencyId)
-Generator.md.getUpdateDocumentsItem(document, currencyId)
-Generator.md.getCreateDocumentsFact(sender, items)
-Generator.md.getUpdateDocumentsFact(sender, items)
+Generator.document.getCreateDocumentsItem(document, currencyId)
+Generator.document.getUpdateDocumentsItem(document, currencyId)
+Generator.document.getCreateDocumentsFact(sender, items)
+Generator.document.getUpdateDocumentsFact(sender, items)
 ```
 
 Note that create-documents and update-documents of `mitum-document` are common operations of `blocksign` and `blockcity`.
 
-So `md` helps to generate `item` and`fact` of those operations simultaneously.
+So `document` helps to generate `item` and`fact` of those operations simultaneously.
 
-3. to generate `blocksign` specific objects, use `Generator.md.bs`.
+3. to generate `blocksign` specific objects, use `Generator.document.blocksign`.
 
 ```js
-Generator.md.bs.user(address, signcode, signed)
-Generator.md.bs.document(documentId, owner, fileHash, creator, title, size, signers)
-Generator.md.bs.getSignDocumentsItem(documentId, owner, currencyId)
-Generator.md.bs.getSignDocumentsFact(sender, items)
+Generator.document.blocksign.user(address, signcode, signed)
+Generator.document.blocksign.document(documentId, owner, fileHash, creator, title, size, signers)
+Generator.document.blocksign.getSignDocumentsItem(documentId, owner, currencyId)
+Generator.document.blocksign.getSignDocumentsFact(sender, items)
 ```
 
 Note that `sign-documents` is provided only for `blocksign`.
 
-So what supports sign-documents is `Generator.md.bs` rather than `Generator.md`.
+So what supports sign-documents is `Generator.document.blocksign` rather than `Generator.document`.
 
 The output of `user` is served as 'creator' or 'signer' of `document`. 
 
-4. To generate `blockcity` specific objects, use `Generator.md.bc`.
+4. To generate `blockcity` specific objects, use `Generator.document.blockcity`.
 
 ```js
-Generator.md.bc.candidate(address, nickname, manifest, count)
-Generator.md.bc.userStatistics(hp, strength, agility, dexterity, charisma intelligence, vital)
+Generator.document.blockcity.candidate(address, nickname, manifest, count)
+Generator.document.blockcity.userStatistics(hp, strength, agility, dexterity, charisma intelligence, vital)
 
-Generator.md.bc.userDocument(documentId, owner, gold, bankGold, userStatistics)
-Generator.md.bc.landDocument(documentId, owner, address, area, renter, account, rentDate, period)
-Generator.md.bc.voteDocument(documentId, owner, round, endTime, candidates, bossName, account, office)
-Generator.md.bc.historyDocument(documentId, owner, name, account, date, usage, application)
+Generator.document.blockcity.userDocument(documentId, owner, gold, bankGold, userStatistics)
+Generator.document.blockcity.landDocument(documentId, owner, address, area, renter, account, rentDate, period)
+Generator.document.blockcity.voteDocument(documentId, owner, round, endTime, candidates, bossName, account, office)
+Generator.document.blockcity.historyDocument(documentId, owner, name, account, date, usage, application)
+```
+5. For `mitum-feefi`, use `Generator.feefi`.
+
+```js
+Generator.feefi.getPoolRegisterFact(sender, target, initFee, incomeCid, outgoCid, cid)
+Generator.feefi.getPoolPolicyUpdaterFact(sender, target, fee, poolId, cid)
+Generator.feefi.getPoolDepositsFact(sender, pool, poolId, amount)
+Generator.feefi.getPoolWithdrawFact(sender, pool, poolId, amounts)
 ```
 
-5. To create operation and seal, use `Generator.getOperation(fact, memo)` and `Generator.getSeal(signKey, operations)`.
+6. To create operation and seal, use `Generator.getOperation(fact, memo)` and `Generator.getSeal(signKey, operations)`.
 
 ```js
 Generator.getOperation(fact, memo)
@@ -270,11 +298,11 @@ const pub1 = "21nHZiHxhjwXtXXhPFzMvGyAAdCobmZeCC1bT1yLXAaw2mpu"
 const pub2 = "mZKEkm4BnFq6ynq98q4bCEcE4kZhzLSViPbCx8LDBXk2mpu"
 const pub3 = "dPBms4cH4t8tiH6uNbq37HrEWwgrrEZqHQwSbvqEBJ85mpu"
 
-const key1 = gn.mc.key(pub1, 30); // public key in the account & weight
-const key2 = gn.mc.key(pub2, 30);
-const key3 = gn.mc.key(pub3, 40);
+const key1 = gn.currency.key(pub1, 30); // public key in the account & weight
+const key2 = gn.currency.key(pub2, 30);
+const key3 = gn.currency.key(pub3, 40);
 
-const keys = gn.mc.keys([key1, key2, key3], 100); // key list & threshold
+const keys = gn.currency.keys([key1, key2, key3], 100); // key list & threshold
 
 const address = keys.address; // address of the account as string
 
@@ -287,7 +315,7 @@ This part shows how to generate operations of currency model.
 
 ### Generate Create-Accounts 
 
-For new account, `currency id` and `initial amount` must be set. With source account, you can create and register new account of target public key.
+For new account, `currency id` and `initial amount` must be set. With source account, you can create and register new account for target public keys.
 
 Note that source account must be already registered one.
 
@@ -304,14 +332,14 @@ const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; //
 const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
 const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu"; // public key of the account to newly create
 
-const key = gn.mc.key(targetPub, 100);
-const keys = gn.mc.keys([key], 100);
+const key = gn.currency.key(targetPub, 100);
+const keys = gn.currency.keys([key], 100);
 
-const amount = gn.mc.amount("MCC", "100");
-const amounts = gn.mc.amounts([amount]);
+const amount = gn.currency.amount("MCC", "100");
+const amounts = gn.currency.amounts([amount]);
 
-const createAccountsItem = gn.mc.getCreateAccountsItem(keys, amounts);
-const createAccountsFact = gn.mc.getCreateAccountsFact(sourceAddr, [createAccountsItem]);
+const createAccountsItem = gn.currency.getCreateAccountsItem(keys, amounts);
+const createAccountsFact = gn.currency.getCreateAccountsFact(sourceAddr, [createAccountsItem]);
 const createAccounts = gn.getOperation(createAccountsFact, "");
 createAccounts.addSign(sourcePriv);
 ```
@@ -359,10 +387,10 @@ const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; //
 const toPub = "fNRMg9HNguo1zDtA9E526BGD1yxnBn8zmFE2WXJXqtn9mpu";
 const fromAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
-const key = gn.mc.key(toPub, 100);
-const keys = gn.mc.keys([key], 100);
+const key = gn.currency.key(toPub, 100);
+const keys = gn.currency.keys([key], 100);
 
-const keyUpdaterFact = gn.mc.getKeyUpdaterFact(fromAddr, "MCC", keys);
+const keyUpdaterFact = gn.currency.getKeyUpdaterFact(fromAddr, "MCC", keys);
 const keyUpdater = gn.getOperation(keyUpdaterFact, "");
 keyUpdater.addSign(sourcePriv);
 ```
@@ -382,13 +410,42 @@ const sourcePriv = "KzdeJMr8e2fbquuZwr9SEd9e1ZWGmZEj96NuAwHnz7jnfJ7FqHQBmpr";
 const sourceAddr = "2D5vAb2X3Rs6ZKPjVsK6UHcnGxGfUuXDR1ED1hcvUHqsmca";
 const targetAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
-const amount = gn.mc.amount("100", "MCC");
-const amounts = gn.mc.amounts([amount]);
+const amount = gn.currency.amount("100", "MCC");
+const amounts = gn.currency.amounts([amount]);
 
-const transfersItem = gn.mc.getTransfersItem(targetAddr, amounts);
-const transfersFact = gn.mc.getTransfersFact(sourceAddr, [transfersItem]);
+const transfersItem = gn.currency.getTransfersItem(targetAddr, amounts);
+const transfersFact = gn.currency.getTransfersFact(sourceAddr, [transfersItem]);
 const transfers = gn.getOperation(transfersFact, "");
 transfers.addSign(sourcePriv);
+```
+
+### Generate Create-Contract-Accounts
+
+For new contract account, `currency id` and `initial amount` must be set. With source account, you can create and register new contract account for target public keys.
+
+Note that source account must be already registered one.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const sourcePriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const sourceAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const targetPub = "caRF1K6yCpaBh25hCS3czckjTjaRBpjvVsZn3qKWGzPCmpu"; // public key of the account to newly create
+
+const key = gn.currency.key(targetPub, 100);
+const keys = gn.currency.keys([key], 100);
+
+const amount = gn.currency.amount("MCC", "100");
+const amounts = gn.currency.amounts([amount]);
+
+const createContractAccountsItem = gn.currency.extension.getCreateContractAccountsItem(keys, amounts);
+const createContractAccountsFact = gn.currency.extension.getCreateContractAccountsFact(sourceAddr, [createAccountsItem]);
+const createAccounts = gn.getOperation(createAccountsFact, "");
+createAccounts.addSign(sourcePriv);
 ```
 
 ## Generate Document Operation
@@ -411,7 +468,7 @@ First, you must prepare a creator and signers.
 
 For convenience, call each of them `user`.
 
-A `user` can be generated by `Generator.md.bs.user(address, signCode, signed)`
+A `user` can be generated by `Generator.document.blocksign.user(address, signCode, signed)`
 
 What you have to prepare to generate document are
 
@@ -437,10 +494,10 @@ const owner = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 const signer1 = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 const signer2 = "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca";
 
-const creator = gn.md.bs.user(owner, "signcode00", true)
-const user1 = gn.md.bs.user(signer1, "signcode01", true);
-const user2 = gn.md.bs.user(signer2, "signcode02", false);
-const document = gn.md.bs.document("docid01sdi", owner, "test-hs:01", creator, "test-doc-01", "12345", [user1, user2]);
+const creator = gn.document.blocksign.user(owner, "signcode00", true)
+const user1 = gn.document.blocksign.user(signer1, "signcode01", true);
+const user2 = gn.document.blocksign.user(signer2, "signcode02", false);
+const document = gn.document.blocksign.document("docid01sdi", owner, "test-hs:01", creator, "test-doc-01", "12345", [user1, user2]);
 ```
 
 If you wonder what each argument means, go to [generator](#generator).
@@ -481,8 +538,8 @@ const gn = new Generator('mitum');
 
 const owner = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
-const statistics = gn.md.bc.userStatistics(1, 1, 1, 1, 1, 1, 1, 1);
-const document = gn.md.bc.userDocument("4000cui", owner, 1, 1, statistics);
+const statistics = gn.document.blockcity.userStatistics(1, 1, 1, 1, 1, 1, 1, 1);
+const document = gn.document.blockcity.userDocument("4000cui", owner, 1, 1, statistics);
 ```
 
 #### Land Document
@@ -499,7 +556,7 @@ What you must prepare are,
 
 ```js
 // same gn and owner with user document
-const document = gn.md.bc.landDocument("4000cli", owner, "abcd", "city1", "foo", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2021-10-22", 10);
+const document = gn.document.blockcity.landDocument("4000cli", owner, "abcd", "city1", "foo", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2021-10-22", 10);
 ```
 
 #### Vote Document
@@ -518,9 +575,9 @@ What you must prepare are,
 const c1 = "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca";
 const c2 = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca";
 
-const candidate1 = gn.md.bc.candidate(c1, "candidate01", "hello", 1);
-const candidate2 = gn.md.bc.candidate(c2, "candidate02", "hi@", 2);
-const document = gn.md.bc.voteDocument("4000cvi", owner, 1, "2022-01-01T03:02:01.333", [candidate1, candidate2], "boss01", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "foo01");
+const candidate1 = gn.document.blockcity.candidate(c1, "candidate01", "hello", 1);
+const candidate2 = gn.document.blockcity.candidate(c2, "candidate02", "hi@", 2);
+const document = gn.document.blockcity.voteDocument("4000cvi", owner, 1, "2022-01-01T03:02:01.333", [candidate1, candidate2], "boss01", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "foo01");
 ```
 
 #### History Document
@@ -537,12 +594,12 @@ What you must prepare are,
 
 ```js
 // same gn and owner with user document
-const document = gn.md.bc.historyDocument("4000chi", owner, "user01", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2022-02-01T03:03:02.333", "usage1", "application1");
+const document = gn.document.blockcity.historyDocument("4000chi", owner, "user01", "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", "2022-02-01T03:03:02.333", "usage1", "application1");
 ```
 
 ### Generate Create-Documents
 
-All models based on 'mitum-document' are played with operations,  'create-documents' and 'update-documents'.
+All models based on 'mitum-document' are played with operations, 'create-documents' and 'update-documents'.
 
 So in this section, we will introduce how to generate create-documents and update-documents operation with documents you prepared.
 
@@ -563,8 +620,8 @@ const gn = new Generator('mitum');
 
 // .. generate document
 
-const item = gn.md.getCreateDocumentsItem(document, "PEN");
-const fact = gn.md.getCreateDocumentsFact("5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", [item]);
+const item = gn.document.getCreateDocumentsItem(document, "PEN");
+const fact = gn.document.getCreateDocumentsFact("5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", [item]);
 
 const operation = gn.getOperation(fact, "");
 operation.addSign("Kz5gif6kskQA8HD6GeEjPse1LuqF8d3WFEauTSAuCwD1h94vboyAmpr");
@@ -591,8 +648,8 @@ const gn = new Generator('mitum');
 
 // .. generate document
 
-const item = gn.md.getUpdateDocumentsItem(document, "PEN");
-const fact = gn.md.getUpdateDocumentsFact("5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", [item]);
+const item = gn.document.getUpdateDocumentsItem(document, "PEN");
+const fact = gn.document.getUpdateDocumentsFact("5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", [item]);
 
 const operation = gn.getOperation(fact, "");
 operation.addSign("Kz5gif6kskQA8HD6GeEjPse1LuqF8d3WFEauTSAuCwD1h94vboyAmpr");
@@ -606,7 +663,7 @@ See [Generator](#generator) for details.
 
 As mentioned, `sign-documents` operation is used only for 'blocksign'.
 
-So you must use blocksign specific generator, `Generator.md.bs` to generate items and facts of sign-documents.
+So you must use blocksign specific generator, `Generator.document.blocksign` to generate items and facts of sign-documents.
 
 To generate a sign-document's item, you must prepare
 
@@ -623,14 +680,107 @@ import { Generator } from 'mitumc';
 
 const gn = new Generator('mitum'); // new Generator({networkId})
 
-const item = gn.md.bs.getSignDocumentsItem("4000sdi", "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", "PEN");
-const fact = gn.md.bs.getSignDocumentsFact("Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", [item]);
+const item = gn.document.blocksign.getSignDocumentsItem("4000sdi", "5KGBDDsmNXCa69kVAgRxDovu7JWxdsUxtAz7GncKxRfqmca", "PEN");
+const fact = gn.document.blocksign.getSignDocumentsFact("Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca", [item]);
 
 const operation = gn.getOperation(fact, "");
 operation.addSign("Kz5gif6kskQA8HD6GeEjPse1LuqF8d3WFEauTSAuCwD1h94vboyAmpr");
 ```
 
 See [Generator](#generator) for details.
+
+## Generate FeeFi Operation
+
+This part shows how to generate operations of feefi model. 
+
+### Generate Pool-Register
+
+`Pool-Register` literally supports to register pool to contract account.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
+
+const amount = gn.currency.amount("MCC", "100");
+
+const fact = gn.feefi.getPoolRegisterFact(senderAddr, targetAddr, amount, "AAA", "BBB", "MCC"); // sender, target, amount, incoming cid, outgoding cid, cid
+const operation = gn.getOperation(PoolRegisterFact, "");
+operation.addSign(senderPriv);
+```
+
+### Generate Pool-Policy-Updater
+
+`Pool-Policy-Updater` supports to update registered pool policy.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
+
+const amount = gn.currency.amount("100", "MCC");
+
+const fact = gn.feefi.getPoolPolicyUpdaterFact(senderAddr, targetAddr, amount, "ABC", "MCC"); // sender, target, amount, pool id, currency id
+const operation = gn.getOperation(fact, "");
+operation.addSign(senderPriv);
+```
+
+### Generate Pool-Deposits
+
+`Pool-Deposits` supports to deposit amount to pool.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
+
+const amount = gn.currency.amount("100", "MCC");
+
+const fact = gn.feefi.getPoolDepositsFact(senderAddr, targetAddr, "ABC", amount); // sender, pool, pool id, amount
+const operation = gn.getOperation(fact, "");
+operation.addSign(senderPriv);
+```
+
+### Generate Pool-Withdraw
+
+`Pool-Withdraw` supports to withdraw amounts from pool.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
+
+const amount = gn.currency.amount("100", "MCC");
+const amounts = gn.currency.amounts([amount])
+
+const fact = gn.feefi.getPoolWithdrawFact(senderAddr, targetAddr, "ABC", amounts) // sender, pool, pool id, amounts
+const operation = gn.getOperation(fact, "")
+operation.addSign(senderPriv)
+```
 
 ## Generate New Seal
 
