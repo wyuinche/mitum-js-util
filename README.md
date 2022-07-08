@@ -442,8 +442,8 @@ const amounts = gn.currency.amounts([amount]);
 
 const createContractAccountsItem = gn.currency.extension.getCreateContractAccountsItem(keys, amounts);
 const createContractAccountsFact = gn.currency.extension.getCreateContractAccountsFact(sourceAddr, [createAccountsItem]);
-const createAccounts = gn.getOperation(createAccountsFact, "");
-createAccounts.addSign(sourcePriv);
+const createContractAccounts = gn.getOperation(createContractAccountsFact, "");
+createContractAccounts.addSign(sourcePriv);
 ```
 
 ### Generate Withdraws
@@ -464,10 +464,10 @@ const targetAddr = "2D5vAb2X3Rs6ZKPjVsK6UHcnGxGfUuXDR1ED1hcvUHqsmca"; // target 
 const amount = gn.currency.amount("MCC", "100");
 const amounts = gn.currency.amounts([amount]);
 
-const item = gn.currency.extension.getWithdrawsItem(targetAddr,  amounts);
-const fact = gn.currency.extension.getWithdrawsFact(senderAddr, [item])
-const operation = gn.getOperation(fact, "")
-operation.addSign(senderPriv)
+const withdrawsItem = gn.currency.extension.getWithdrawsItem(targetAddr,  amounts);
+const withdrawsFact = gn.currency.extension.getWithdrawsFact(senderAddr, [withdrawsItem])
+const withdraws = gn.getOperation(withdrawsFact, "")
+withdraws.addSign(senderPriv)
 ```
 
 ## Generate Document Operation
@@ -730,9 +730,9 @@ const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target 
 
 const amount = gn.currency.amount("MCC", "100");
 
-const fact = gn.feefi.getPoolRegisterFact(senderAddr, targetAddr, amount, "AAA", "BBB", "MCC"); // sender, target, amount, incoming cid, outgoding cid, cid
-const operation = gn.getOperation(PoolRegisterFact, "");
-operation.addSign(senderPriv);
+const poolRegisterFact = gn.feefi.getPoolRegisterFact(senderAddr, targetAddr, amount, "AAA", "BBB", "MCC"); // sender, target, amount, incoming cid, outgoding cid, cid
+const poolRegister = gn.getOperation(poolRegisterFact, "");
+poolRegister.addSign(senderPriv);
 ```
 
 ### Generate Pool-Policy-Updater
@@ -752,9 +752,9 @@ const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target 
 
 const amount = gn.currency.amount("100", "MCC");
 
-const fact = gn.feefi.getPoolPolicyUpdaterFact(senderAddr, targetAddr, amount, "ABC", "MCC"); // sender, target, amount, pool id, currency id
-const operation = gn.getOperation(fact, "");
-operation.addSign(senderPriv);
+const poolPolicyUpdaterFact = gn.feefi.getPoolPolicyUpdaterFact(senderAddr, targetAddr, amount, "ABC", "MCC"); // sender, target, amount, pool id, currency id
+const poolPolicyUpdater = gn.getOperation(poolPolicyUpdaterFact, "");
+poolPolicyUpdater.addSign(senderPriv);
 ```
 
 ### Generate Pool-Deposits
@@ -774,9 +774,9 @@ const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target 
 
 const amount = gn.currency.amount("100", "MCC");
 
-const fact = gn.feefi.getPoolDepositsFact(senderAddr, targetAddr, "ABC", amount); // sender, pool, pool id, amount
-const operation = gn.getOperation(fact, "");
-operation.addSign(senderPriv);
+const poolDepositsFact = gn.feefi.getPoolDepositsFact(senderAddr, targetAddr, "ABC", amount); // sender, pool, pool id, amount
+const poolDeposits = gn.getOperation(poolDepositsFact, "");
+poolDeposits.addSign(senderPriv);
 ```
 
 ### Generate Pool-Withdraw
@@ -797,9 +797,9 @@ const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target 
 const amount = gn.currency.amount("100", "MCC");
 const amounts = gn.currency.amounts([amount])
 
-const fact = gn.feefi.getPoolWithdrawFact(senderAddr, targetAddr, "ABC", amounts) // sender, pool, pool id, amounts
-const operation = gn.getOperation(fact, "")
-operation.addSign(senderPriv)
+const poolWithdrawFact = gn.feefi.getPoolWithdrawFact(senderAddr, targetAddr, "ABC", amounts) // sender, pool, pool id, amounts
+const poolWithdraw = gn.getOperation(poolWithdrawFact, "")
+poolWithdraw.addSign(senderPriv)
 ```
 
 ## Generate New Seal
