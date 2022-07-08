@@ -1,6 +1,12 @@
 # mitum-js-util
 
-'mitum-js-util' is a javascript tool that allows you to create operations of [mitum-currency](https://github.com/ProtoconNet/mitum-currency), [mitum-document](https://github.com/ProtoconNet/mitum-document), [mitum-currency-extension](https://github.com/ProtoconNet/mitum-currency-extension), and [mitum-feefi](https://github.com/ProtoconNet/mitum-feefi).
+'matum-js-util' is a JavaScript tool that can create jobs for the models below.
+
+* [mitum-currency](https://github.com/ProtoconNet/mitum-currency)
+* [mitum-currency-extension](https://github.com/ProtoconNet/mitum-currency-extension)
+* [mitum-document](https://github.com/ProtoconNet/mitum-document)
+* [mitum-feefi](https://github.com/ProtoconNet/mitum-feefi).
+* [mitum-nft](https://github.com/ProtoconNet/mitum-nft).
 
 All addresses and keys are examples only. Never mind each value in the example.
 
@@ -28,7 +34,7 @@ Note the package name of 'mitum-js-util' is 'mitumc'.
 $ npm install mitumc
 ```
 
-Note that the latest version of `mitumc` is `v2.0.0-beta`.
+Note that the latest version of `mitumc` is `v2.0.0-beta2`.
 
 All versions before `v1.0.0` are trial.
 
@@ -56,10 +62,18 @@ All versions before `v1.0.0` are trial.
 |5-2|[Generate Pool-Policy-Updater](#generate-pool-policy-updater)|
 |5-3|[Generate Pool-Deposits](#generate-pool-deposits)|
 |5-4|[Generate Pool-Withdraw](#generate-pool-withdraw)|
-|6|[Generate New Seal](#generate-new-seal)|
-|7|[Send Seal to Network](#send-seal-to-network)|
-|8|[Sign Message](#sign-message)|
-|9|[Add Fact Signature to Operation](#add-fact-signature-to-operation)|
+|6|[Generate NFT Operation](#generate-nft-operation)|
+|6-1|[Generate Collection-Register](#generate-collection-register)|
+|6-2|[Generate NFT Mint](#generate-nft-mint)|
+|6-3|[Generate NFT Transfer](#generate-nft-transfer)|
+|6-4|[Generate NFT Burn](#generate-nft-burn)|
+|6-5|[Generate Approve](#generate-approve)|
+|6-6|[Generate Delegate](#generate-delegate)|
+|6-7|[Generate NFT Sign](#generate-nft-sign)|
+|7|[Generate New Seal](#generate-new-seal)|
+|8|[Send Seal to Network](#send-seal-to-network)|
+|9|[Sign Message](#sign-message)|
+|10|[Add Fact Signature to Operation](#add-fact-signature-to-operation)|
 
 <br />
 
@@ -182,12 +196,22 @@ The following types of documents are available for each model:
 * `blocksign` for 'blocksign'.
 * `user`, `land`, `vote`, and `history` for 'blockcity'.
 
-Finally, 'mitum-js-util' provides four operations of 'mitum-feefi'.
+'mitum-js-util' provides four operations of 'mitum-feefi'.
 
 * `Pool-Register` registers 'pool' in the contract account.
 * `Pool-Policy-Updater` updates 'policy' of the pool in the contract account.
 * `Pool-Deposits` deposits amounts in the pool.
 * `Pool-Withdraw` withdraws amounts from the pool.
+
+Finally, 'mitum-js-util' provides seven operations of 'mitum-nft'.
+
+* `Collection-Register` registers 'collection' in the contract account.
+* `NFT Mint` registers a new nft in 'collection'.
+* `NFT Transfer` changes ownership of nft.
+* `NFT Burn` burns nft.
+* `Approve` delegates the authority to change ownership of a specific nft to a general account.
+* `Delegate` delegates the authority to change ownership of all nfts owned by some general account for a specific 'collection'.
+* Through `NFT Sign`, you can sign nft as a creator or copyrighter.
 
 ### Generator
 
@@ -266,13 +290,35 @@ Generator.document.blockcity.historyDocument(documentId, owner, name, account, d
 5. For `mitum-feefi`, use `Generator.feefi`.
 
 ```js
-Generator.feefi.getPoolRegisterFact(sender, target, initFee, incomeCid, outgoCid, cid)
-Generator.feefi.getPoolPolicyUpdaterFact(sender, target, fee, poolId, cid)
+Generator.feefi.getPoolRegisterFact(sender, target, initFee, incomeCid, outgoCid, currencyId)
+Generator.feefi.getPoolPolicyUpdaterFact(sender, target, fee, poolId, currencyId)
 Generator.feefi.getPoolDepositsFact(sender, pool, poolId, amount)
 Generator.feefi.getPoolWithdrawFact(sender, pool, poolId, amounts)
 ```
 
-6. To create operations and seals, use `Generator.getOperation(fact, memo)` and `Generator.getSeal(signKey, operations)`.
+6. For `mitum-nft`, use `Generator.nft`.
+
+```js
+Generator.nft.signer(account, share, signed)
+Generator.nft.signers(total, signers)
+Generator.nft.collectionRegisterForm(target, symbol, name, royalty, uri)
+Generator.nft.mintForm(hash, uri, creators, copyrighters)
+Generator.nft.getMintItem(collection, form, currencyId)
+Generator.nft.getTransferItem(receiver, nftId, currencyId)
+Generator.nft.getBurnItem(nftId, currencyId)
+Generator.nft.getApproveItem(approved, nftId, currencyId)
+Generator.nft.getDelegateItem(collection, agent, mode, currencyId)
+Generator.nft.getSignItem(qualification, nftId, cid)
+Generator.nft.getCollectionRegisterFact(sender, form, currencyId)
+Generator.nft.getMintFact(sender, items)
+Generator.nft.getTransferFact(sender, items)
+Generator.nft.getBurnFact(sender, items)
+Generator.nft.getApproveFact(sender, items)
+Generator.nft.getDelegateFact(sender, items)
+Generator.nft.getSignFact(sender, items)
+```
+
+7. To create operations and seals, use `Generator.getOperation(fact, memo)` and `Generator.getSeal(signKey, operations)`.
 
 ```js
 Generator.getOperation(fact, memo)
@@ -800,6 +846,173 @@ const amounts = gn.currency.amounts([amount])
 const poolWithdrawFact = gn.feefi.getPoolWithdrawFact(senderAddr, targetAddr, "ABC", amounts) // sender, pool, pool id, amounts
 const poolWithdraw = gn.getOperation(poolWithdrawFact, "")
 poolWithdraw.addSign(senderPriv)
+```
+
+## Generate NFT Operation
+
+This part shows how to generate operations of the nft model.
+
+### Generate Collection-Register
+
+`Collection-Register` supports the registration of `collection` in the contract account.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
+
+const form = gn.nft.collectionRegisterForm(targetAddr, "AAA", "FirstCollection", 0, "https://localhost:5000/AAA"); // target, symbol, name, roylaty, uri
+
+const collectionRegisterFact = gn.nft.getCollectionRegisterFact(senderAddr, form, "PEN"); // sender, form, cid
+const collectionRegister = gn.getOperation(collectionRegisterFact, "");
+collectionRegister.addSign(senderPriv);
+```
+
+### Generate NFT Mint
+
+`NFT Mint` supports the registration of a new nft in the collection.
+
+#### Usage
+
+This example shows how to create an operation when both the creator and copyrighter are the same account as minting nft.
+Actually, any general account can be a creator and a copyrighter.
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+
+const creator = gn.nft.signer(senderAddr, 100, false);
+const copyrighter = gn.nft.signer(senderAddr, 100, false);
+
+const creators = gn.nft.signers(100, [creator]);
+const copyrighters = gn.nft.signers(100, [copyrighter]);
+
+const form = gn.nft.mintForm("hash"/* enter nft hash */, "https://localhost:5000/AAA/1", creators, copyrighters);
+const mintItem = gn.nft.getMintItem("AAA", form, "PEN");
+
+const mintFact = gn.nft.getMintFact(senderAddr, [mintItem]);
+const mint = gn.getOperation(mintFact, "");
+mint.addSign(senderPriv);
+```
+
+### Generate NFT Transfer
+
+`NFT Transfer` supports the transfer of nft.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const targetAddr = "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca"; // receiver's account address
+
+const transferItem = gn.nft.getTransferItem(targetAddr, "AAA-00001", "PEN"); // receiver, nid, cid
+const transferFact = gn.nft.getTransferFact(senderAddr, [transferItem]);
+
+const transfer = gn.getOperation(transferFact, "");
+transfer.addSign(senderPriv);
+```
+
+### Generate NFT Burn
+
+`NFT Burn` supports nft burning.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+
+const burnItem = gn.nft.getBurnItem("AAA-00001", "PEN"); // nid, cid
+const burnFact = gn.nft.getBurnFact(senderAddr, [burnItem]);
+
+const burn = gn.getOperation(burnFact, "");
+burn.addSign(senderPriv);
+```
+
+### Generate Approve
+
+`NFT Approval` supports delegation of authority for specific nft ownership changes.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const approvedAddr = "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca"; // approved's account address
+
+const approveItem = gn.nft.getApproveItem(approvedAddr, "AAA-00001", "PEN"); // approved, nid, cid
+const approveFact = gn.nft.getApproveFact(senderAddr, [approveItem]);
+
+const approve = gn.getOperation(approveFact, "");
+approve.addSign(senderPriv);
+```
+
+### Generate Delegate
+
+`NFT Delegation` supports delegating the authority to change ownership of all nfts held by one general account for a collection.
+
+#### Usage
+
+```js
+import { Generator, modes } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const agentAddr = "Gu5xHjhos5WkjGo9jKmYMY7dwWWzbEGdQCs11QkyAhh8mca"; // agent's account address
+
+const { DELEGATE_MODE } = modes;
+const delegateItem = gn.nft.getDelegateItem("AAA", agentAddr, DELEGATE_MODE.allow, "PEN"); // collection, agent, delegate-mode[allow || cancel], cid
+const delegateFact = gn.nft.getDelegateFact(senderAddr, [delegateItem]);
+
+const delegate = gn.getOperation(delegateFact, "");
+delegate.addSign(senderPriv);
+```
+
+### Generate NFT Sign
+
+`NFT Sign` supports signing in nft as a creator or copyrighter.
+
+#### Usage
+
+```js
+import { Generator, modes } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+
+const { SIGN_QUALIFICATION } = modes;
+const signItem = gn.nft.getSignItem(SIGN_QUALIFICATION.creator, "AAA-00001", "PEN"); // sign-qualification[creator || copyrighter], nid, cid
+const signFact = gn.nft.getSignFact(senderAddr, [signItem]);
+
+const sign = gn.getOperation(signFact, "");
+sign.addSign(senderPriv);
 ```
 
 ## Generate New Seal

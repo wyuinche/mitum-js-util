@@ -1,6 +1,6 @@
 {
   "name": "mitumc",
-  "version": "2.0.0-beta",
+  "version": "2.0.0-beta2",
   "mversion": "0.0.1",
   "description": "javascript sdk for mitum-currency and mitum-data-blocksign",
   "main": "index.js",
