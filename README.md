@@ -64,12 +64,13 @@ All versions before `v1.0.0` are trial.
 |5-4|[Generate Pool-Withdraw](#generate-pool-withdraw)|
 |6|[Generate NFT Operation](#generate-nft-operation)|
 |6-1|[Generate Collection-Register](#generate-collection-register)|
-|6-2|[Generate NFT Mint](#generate-nft-mint)|
-|6-3|[Generate NFT Transfer](#generate-nft-transfer)|
-|6-4|[Generate NFT Burn](#generate-nft-burn)|
-|6-5|[Generate Approve](#generate-approve)|
-|6-6|[Generate Delegate](#generate-delegate)|
-|6-7|[Generate NFT Sign](#generate-nft-sign)|
+|6-2|[Generate Collection-Policy-Updater](#generate-collection-policy-updater)|
+|6-3|[Generate NFT Mint](#generate-nft-mint)|
+|6-4|[Generate NFT Transfer](#generate-nft-transfer)|
+|6-5|[Generate NFT Burn](#generate-nft-burn)|
+|6-6|[Generate Approve](#generate-approve)|
+|6-7|[Generate Delegate](#generate-delegate)|
+|6-8|[Generate NFT Sign](#generate-nft-sign)|
 |7|[Generate New Seal](#generate-new-seal)|
 |8|[Send Seal to Network](#send-seal-to-network)|
 |9|[Sign Message](#sign-message)|
@@ -206,6 +207,7 @@ The following types of documents are available for each model:
 Finally, 'mitum-js-util' provides seven operations of 'mitum-nft'.
 
 * `Collection-Register` registers 'collection' in the contract account.
+* `Collection-Policy-Updater` updates collection policy.
 * `NFT Mint` registers a new nft in 'collection'.
 * `NFT Transfer` changes ownership of nft.
 * `NFT Burn` burns nft.
@@ -301,7 +303,8 @@ Generator.feefi.getPoolWithdrawFact(sender, pool, poolId, amounts)
 ```js
 Generator.nft.signer(account, share, signed)
 Generator.nft.signers(total, signers)
-Generator.nft.collectionRegisterForm(target, symbol, name, royalty, uri)
+Generator.nft.collectionRegisterForm(target, symbol, name, royalty, uri, whites)
+Generator.nft.collectionPolicy(name, royalty, uri, whites) 
 Generator.nft.mintForm(hash, uri, creators, copyrighters)
 Generator.nft.getMintItem(collection, form, currencyId)
 Generator.nft.getTransferItem(receiver, nftId, currencyId)
@@ -310,6 +313,7 @@ Generator.nft.getApproveItem(approved, nftId, currencyId)
 Generator.nft.getDelegateItem(collection, agent, mode, currencyId)
 Generator.nft.getSignItem(qualification, nftId, cid)
 Generator.nft.getCollectionRegisterFact(sender, form, currencyId)
+Generator.nft.getCollectionPolicyUpdaterFact(sender, collection, policy, cid)
 Generator.nft.getMintFact(sender, items)
 Generator.nft.getTransferFact(sender, items)
 Generator.nft.getBurnFact(sender, items)
@@ -867,11 +871,33 @@ const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; //
 const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
 const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
 
-const form = gn.nft.collectionRegisterForm(targetAddr, "AAA", "FirstCollection", 0, "https://localhost:5000/AAA"); // target, symbol, name, roylaty, uri
+const form = gn.nft.collectionRegisterForm(targetAddr, "AAA", "First Collection", 0, "https://localhost:5000/AAA"); // target, symbol, name, roylaty, uri
 
 const collectionRegisterFact = gn.nft.getCollectionRegisterFact(senderAddr, form, "PEN"); // sender, form, cid
 const collectionRegister = gn.getOperation(collectionRegisterFact, "");
 collectionRegister.addSign(senderPriv);
+```
+
+### Generate Collection-Policy-Updater
+
+`Collection-Policy-Updater` supports updating collection policies.
+
+#### Usage
+
+```js
+import { Generator } from 'mitumc';
+
+const gn = new Generator('mitum');
+
+const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
+const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
+const whiteAddr = "2D5vAb2X3Rs6ZKPjVsK6UHcnGxGfUuXDR1ED1hcvUHqsmca";
+
+const policy = gn.nft.collectionPolicy("Updated Collection", 2, "https://localhost:5000/collection/updated", [whiteAddr]); // target, symbol, name, roylaty, uri, whites
+
+const collectionPolicyUpdaterFact = gn.nft.getCollectionPolicyUpdaterFact(senderAddr "AAA", policy, "MCC"); // sender, collection, policy, cid
+const collectionPolicyUpdater = gn.getOperation(collectionPolicyUpdaterFact, "");
+collectionPolicyUpdater.addSign(senderPriv);
 ```
 
 ### Generate NFT Mint
