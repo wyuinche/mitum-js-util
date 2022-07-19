@@ -895,7 +895,7 @@ const whiteAddr = "2D5vAb2X3Rs6ZKPjVsK6UHcnGxGfUuXDR1ED1hcvUHqsmca";
 
 const policy = gn.nft.collectionPolicy("Updated Collection", 2, "https://localhost:5000/collection/updated", [whiteAddr]); // target, symbol, name, roylaty, uri, whites
 
-const collectionPolicyUpdaterFact = gn.nft.getCollectionPolicyUpdaterFact(senderAddr "AAA", policy, "MCC"); // sender, collection, policy, cid
+const collectionPolicyUpdaterFact = gn.nft.getCollectionPolicyUpdaterFact(senderAddr, "AAA", policy, "MCC"); // sender, collection, policy, cid
 const collectionPolicyUpdater = gn.getOperation(collectionPolicyUpdaterFact, "");
 collectionPolicyUpdater.addSign(senderPriv);
 ```
