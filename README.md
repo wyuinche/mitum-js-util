@@ -761,7 +761,7 @@ See [Generator](#generator) for more information.
 
 ## Generate FeeFi Operation
 
-This part shows how to generate operations of the fefi model.
+This part shows how to generate operations for the feefi model.
 
 ### Generate Pool-Register
 
