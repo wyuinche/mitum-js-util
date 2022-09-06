@@ -1,8 +1,8 @@
 {
   "name": "mitumc",
-  "version": "2.0.0-beta2",
+  "version": "2.0.1-beta",
   "mversion": "0.0.1",
-  "description": "javascript sdk for mitum-currency and mitum-data-blocksign",
+  "description": "javascript sdk for mitum-currency, mitum-currency-extension, mitum-document, mitum-feefi and mitum-nft",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -32,6 +32,7 @@
     "int64-buffer": "^1.0.1",
     "js-sha3": "^0.8.0",
     "secp256k1": "^4.0.3",
+    "secure-random": "^1.1.2",
     "url-parse": "^1.5.4"
   },
   "devDependencies": {
