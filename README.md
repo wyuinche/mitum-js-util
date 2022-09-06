@@ -34,7 +34,7 @@ Note the package name of 'mitum-js-util' is 'mitumc'.
 $ npm install mitumc
 ```
 
-Note that the latest version of `mitumc` is `v2.0.0-beta2`.
+Note that the latest version of `mitumc` is `v2.0.1-beta`.
 
 All versions before `v1.0.0` are trial.
 
