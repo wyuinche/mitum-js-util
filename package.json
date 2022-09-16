@@ -1,6 +1,6 @@
 {
   "name": "mitumc",
-  "version": "2.0.1-beta",
+  "version": "2.0.2-beta",
   "mversion": "0.0.1",
   "description": "javascript sdk for mitum-currency, mitum-currency-extension, mitum-document, mitum-feefi and mitum-nft",
   "main": "index.js",

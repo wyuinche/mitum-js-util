@@ -34,7 +34,7 @@ Note the package name of 'mitum-js-util' is 'mitumc'.
 $ npm install mitumc
 ```
 
-Note that the latest version of `mitumc` is `v2.0.1-beta`.
+Note that the latest version of `mitumc` is `v2.0.2-beta`.
 
 All versions before `v1.0.0` are trial.
 
@@ -870,8 +870,9 @@ const gn = new Generator('mitum');
 const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; // sender's private key
 const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
 const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
+const whiteAddr = "2D5vAb2X3Rs6ZKPjVsK6UHcnGxGfUuXDR1ED1hcvUHqsmca";
 
-const form = gn.nft.collectionRegisterForm(targetAddr, "AAA", "First Collection", 0, "https://localhost:5000/AAA"); // target, symbol, name, roylaty, uri
+const form = gn.nft.collectionRegisterForm(targetAddr, "AAA", "First Collection", 0, "https://localhost:5000/AAA", [whiteAddr]); // target, symbol, name, roylaty, uri, white
 
 const collectionRegisterFact = gn.nft.getCollectionRegisterFact(senderAddr, form, "PEN"); // sender, form, cid
 const collectionRegister = gn.getOperation(collectionRegisterFact, "");
