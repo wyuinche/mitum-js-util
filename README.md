@@ -34,7 +34,7 @@ Note the package name of 'mitum-js-util' is 'mitumc'.
 $ npm install mitumc
 ```
 
-Note that the latest version of `mitumc` is `v2.0.3-beta`.
+Note that the latest version of `mitumc` is `v2.1.0-beta`.
 
 All versions before `v1.0.0` are trial.
 
@@ -292,10 +292,10 @@ Generator.document.blockcity.historyDocument(documentId, owner, name, account, d
 5. For `mitum-feefi`, use `Generator.feefi`.
 
 ```js
-Generator.feefi.getPoolRegisterFact(sender, target, initFee, incomeCid, outgoCid, currencyId)
-Generator.feefi.getPoolPolicyUpdaterFact(sender, target, fee, poolId, currencyId)
-Generator.feefi.getPoolDepositsFact(sender, pool, poolId, amount)
-Generator.feefi.getPoolWithdrawFact(sender, pool, poolId, amounts)
+Generator.feefi.getPoolRegisterFact(sender, target, initFee, incomeCid, outlayCid, currencyId)
+Generator.feefi.getPoolPolicyUpdaterFact(sender, target, fee, incomeCid, outlayCid, currencyId)
+Generator.feefi.getPoolDepositsFact(sender, pool, incomeCid, outlayCid, amount)
+Generator.feefi.getPoolWithdrawFact(sender, pool, incomeCid, outlayCid, amounts)
 ```
 
 6. For `mitum-nft`, use `Generator.nft`.
@@ -778,9 +778,7 @@ const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; //
 const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
 const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
 
-const amount = gn.currency.amount("MCC", "100");
-
-const poolRegisterFact = gn.feefi.getPoolRegisterFact(senderAddr, targetAddr, amount, "AAA", "BBB", "MCC"); // sender, target, amount, incoming cid, outgoding cid, cid
+const poolRegisterFact = gn.feefi.getPoolRegisterFact(senderAddr, targetAddr, "1000", "AAA", "BBB", "MCC"); // sender, target, amount, incoming cid, outlay cid, cid
 const poolRegister = gn.getOperation(poolRegisterFact, "");
 poolRegister.addSign(senderPriv);
 ```
@@ -800,9 +798,7 @@ const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; //
 const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
 const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
 
-const amount = gn.currency.amount("100", "MCC");
-
-const poolPolicyUpdaterFact = gn.feefi.getPoolPolicyUpdaterFact(senderAddr, targetAddr, amount, "ABC", "MCC"); // sender, target, amount, pool id, currency id
+const poolPolicyUpdaterFact = gn.feefi.getPoolPolicyUpdaterFact(senderAddr, targetAddr, "1000", "AAA", "BBB", "MCC"); // sender, target, amount, incoming cid, outlay cid, cid
 const poolPolicyUpdater = gn.getOperation(poolPolicyUpdaterFact, "");
 poolPolicyUpdater.addSign(senderPriv);
 ```
@@ -822,9 +818,7 @@ const senderPriv = "KxD8T82nfwsUmQu3iMXENm93YTTatGFp1AYDPqTo5e6ycvY1xNXpmpr"; //
 const senderAddr = "CY1pkxsqQK6XMbnK4ssDNbDR2K7mitSwdS27DwBjd3Gcmca"; // sender's account address
 const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target contract account address
 
-const amount = gn.currency.amount("100", "MCC");
-
-const poolDepositsFact = gn.feefi.getPoolDepositsFact(senderAddr, targetAddr, "ABC", amount); // sender, pool, pool id, amount
+const poolDepositsFact = gn.feefi.getPoolDepositsFact(senderAddr, targetAddr, "AAA", "BBB", "1000"); // sender, pool, incoming cid, outlay cid, amount
 const poolDeposits = gn.getOperation(poolDepositsFact, "");
 poolDeposits.addSign(senderPriv);
 ```
@@ -847,7 +841,7 @@ const targetAddr = "73fmjoGTgzhpYQPwNrA6j3DbnoCfFH919uZf5LuT8JmWmca"; // target 
 const amount = gn.currency.amount("100", "MCC");
 const amounts = gn.currency.amounts([amount])
 
-const poolWithdrawFact = gn.feefi.getPoolWithdrawFact(senderAddr, targetAddr, "ABC", amounts) // sender, pool, pool id, amounts
+const poolWithdrawFact = gn.feefi.getPoolWithdrawFact(senderAddr, targetAddr, "AAA", "BBB", amounts) // sender, pool, incoming cid, outlay cid, amounts
 const poolWithdraw = gn.getOperation(poolWithdrawFact, "")
 poolWithdraw.addSign(senderPriv)
 ```
