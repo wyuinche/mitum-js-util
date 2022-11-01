@@ -1,8 +1,8 @@
 {
 	"name": "mitumc",
-	"version": "2.1.0-beta",
+	"version": "2.1.1-beta",
 	"mversion": "0.0.1",
-	"description": "javascript sdk for mitum-currency, mitum-currency-extension, mitum-document, mitum-feefi and mitum-nft",
+	"description": "javascript sdk for mitum models",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -13,7 +13,10 @@
 	},
 	"keywords": [
 		"mitum-currency",
-		"mitum-data-blocksign",
+		"mitum-document",
+		"mitum-currency-extension",
+		"mitum-nft",
+		"mitum-feefi",
 		"mitum"
 	],
 	"author": "ProtoconNet",
